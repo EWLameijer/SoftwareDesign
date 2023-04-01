@@ -621,6 +621,169 @@ public class PigLatin {
 }
 ```
 
-Dit ziet er goed uit!
+Dit ziet er goed uit! Ik lever hem in...
+
+Al zie ik later dat String pigLatinSentence = ""; nu helemaal overbodig is; daarom is het normaal goed om in een editor als IDEA te werken, en alle code ook nog eens na te kijken voordat je commit. Is dit bovenstaande de beste of snelste oplossing? Nee, het kan ook in 1 regel met regexes (die ik zeker beter zou kunnen bestuderen). 
+Maar het is in elk geval iets dat redelijk goed is. Op naar de 4e kyu!
+
+4e kyu: https://www.codewars.com/kata/521c2db8ddc89b9b7a0000c1/train/java
+
+Snail Sort
+Given an n x n array, return the array elements arranged from outermost elements to the middle element, traveling clockwise.
+
+array = [[1,2,3],
+         [4,5,6],
+         [7,8,9]]
+snail(array) #=> [1,2,3,6,9,8,7,4,5]
+For better understanding, please follow the numbers of the next array consecutively:
+
+array = [[1,2,3],
+         [8,9,4],
+         [7,6,5]]
+snail(array) #=> [1,2,3,4,5,6,7,8,9]
+This image will illustrate things more clearly:
+
+
+NOTE: The idea is not sort the elements from the lowest value to the highest; the idea is to traverse the 2-d array in a clockwise snailshell pattern.
+
+NOTE 2: The 0x0 (empty matrix) is represented as en empty array inside an array [[]].
+
+```
+public class Snail {
+
+    public static int[] snail(int[][] array) {
+     // enjoy
+   } 
+}
+```
+
+Bij een geval als dit vraag ik me af hoe ik dit probleem zou uitleggen aan iemand die het met de hand zou moeten doen. Waarschijnlijk iets als:
+- begin bij de eerste coordinaat (0,0)
+- ga recht vooruit (de rij af, tot je bij het laatste element komt)
+- draai naar rechts
+- ga recht vooruit, tot je bij het laatste element komt
+- draai naar rechts
+- ga recht vooruit...
+
+Ik maak ook een tekening (van 5x5). Dat heb ik uiteraard op papier gedaan, hier een grove reproductie voor de duidelijkheid.
+```
+. 1> . 2> . 3> . 4> .
+                    1
+                    v
+. 1> . 2> . 3> .    .
+^              1    2 
+3              v    v
+.    . 1> .    .    .
+^    ^         2    3
+2    1         v    v
+.    . <2 . <1 .    .
+^                   4
+1                   v
+. <4 . <3 . <2 . <1 .
+```
+
+Het grote probleem is dat je bij de vierde zijde 1 eerder moet stoppen, je moet onthouden dat je al het element linksboven hebt bezocht. Nu zie ik verschillende mogelijkheden: ik zou een even grote array kunnen maken om aan te geven welke punten ik al bezocht heb (of een set: (0,0), (1,0), (2,0) enzovoorts). Of bijhouden hoever ik mag gaan (dat rij 0 al gedaan is, en dan kolom 5). De tweede mogelijkheid neemt minder geheugen in beslag, maar lijkt me wel wat ingewikkelder.
+
+En soms kan het helpen (een heuristiek/vuistregel die ik in de loop van jaren heb geleerd) het probleem _omgekeerd_ aan te pakken: dat ik een set maak van alle overblijvende coordinaten, die ik langzaam 1 voor 1 verminder. Dat heeft het voordeel dat ik niet hoef te controleren of ik buiten de grenzen van de array kom: als de volgende coordinaat in de richting die ik opga niet bestaat, maar er nog wel coordinaten over zijn, maak ik een bocht.
+
+Ik denk dat ik dat maar doe. En draaien? Wel, een richting geef je als programmeur vaak aan als (dx, dy) (verandering in x, verandering in y). In de eerste rij: dx =1, dy =0 (je gaat naar rechts). Dan draai je naar rechts: dx = 0, dy = 1 (de y neemt toe). Dan weer naar rechts: dx = -1, dy = 0. Dan weer naar rechts: dx = 0, dy = -1.
+
+Als ik probeer daarin patronen te ontdekken lijkt het erop: draai naar rechts: nieuwe dy = oude dx, nieuwe dx is -oude dy. Dus dan inderdaad (1,0), (0,1), (-1,0), (0, -1) (en dan weer (1,0), want (dx = - (oude dy), dy = (oude dx)) == (dx = - (-1), dy = 0) == (1, 0)
+
+Dus mijn strategie is als volgt:
+// Versie 1
+- bepaal de lengte van de array (grootste dx)
+- bepaal de hoogte van de array 
+- maak een set met daarin alle geldige coordinaten
+
+- zolang er nog geldige coordinaten zijn in de set:
+
+
+// Versie 2: ik zie dat een set maken met alle geldige coordinaten wat complexer is, dus daar maak ik een aparte alinea/methode van
+
+- zet de huidige richting (dx, dy) op (1, 0)
+- zet de huidige coordinaat op 0,0
+- @ genereer een set met alle geldige coordinaten 
+- zolang er nog geldige coordinaten zijn in de set
+  - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
+  - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
+  - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
+
+- genereer een set met alle geldige coordinaten 
+  - bepaal de lengte van de array (grootste dx)
+  - bepaal de hoogte van de array 
+  - voor elke x coordinaat van 0 tot de laatste 
+    - voor elke y-coordinaat van 0 tot de laatste 
+      - voeg deze (x,y) toe aan de set van te bezoeken coordinaten      
+
+// Versie 3: ik moet uiteraard wel een lege lijst aanmaken voor het sorteren/opslaan van de punten. En hem ook teruggeven...
+// Dat ik een coordinaat-klasse (wel, record) moet aanmaken en ook een richtings-klasse (record) dat zet ik hier niet expliciet. Of wel een beetje...
+- maak een lege lijst van coordinaten aan
+- zet de huidige richting (dx, dy) op (1, 0)
+- zet de huidige coordinaat op 0,0
+- @ genereer een set met alle geldige coordinaten 
+- zolang er nog geldige coordinaten zijn in de set
+  - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
+  - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
+  - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
+- geef de lijst coordinaten terug
+
+- genereer een set met alle geldige coordinaten 
+  - bepaal de lengte van de array (grootste dx)
+  - bepaal de hoogte van de array 
+  - voor elke x coordinaat van 0 tot de laatste 
+    - voor elke y-coordinaat van 0 tot de laatste 
+      - voeg deze (x,y) toe aan de set van te bezoeken coordinaten 
+
+- # coordinaat
+  - move(direction) => nieuwe coordinaat 
+
+- # direction 
+  - turnRight() => nieuwe direction    
+
+Okee, dat ziet er denk ik voorlopig voldoende solide uit. Laat ik het gaan uitproberen... Invoegen in code:
+
+```
+public class Snail {
+
+    public static int[] snail(int[][] array) {
+     // enjoy
+   } 
+   
+   - maak een lege lijst van coordinaten aan
+- zet de huidige richting (dx, dy) op (1, 0)
+- zet de huidige coordinaat op 0,0
+- @ genereer een set met alle geldige coordinaten 
+- zolang er nog geldige coordinaten zijn in de set
+  - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
+  - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
+  - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
+- geef de lijst coordinaten terug
+
+- genereer een set met alle geldige coordinaten 
+  - bepaal de lengte van de array (grootste dx)
+  - bepaal de hoogte van de array 
+  - voor elke x coordinaat van 0 tot de laatste 
+    - voor elke y-coordinaat van 0 tot de laatste 
+      - voeg deze (x,y) toe aan de set van te bezoeken coordinaten 
+
+- # coordinaat
+  - move(direction) => nieuwe coordinaat 
+  record  Coordinate(int x, int y) {
+    public Coordinate move(Direction d) {
+      return Coordinate(x + d.x(), y + d.y());
+    }
+  }
+  
+
+- # direction 
+  - turnRight() => nieuwe direction    
+  record Direction(int dx, int dy) {
+     public Direction turnRight() {
+       return new Direction(-dy, dx);
+     }
+  }
+}
+```
 
 
