@@ -329,10 +329,298 @@ public class Solution {
 ```
 Ik zou dit waarschijnlijk kunnen doen met een lambda en een range, maar daar heb ik even geen zin in. In elk geval een geslaagde oplossing!
 
+5e Kyu: https://www.codewars.com/kata/520b9d2ad5c005041100000f/train/java
+Move the first letter of each word to the end of it, then add "ay" to the end of the word. Leave punctuation marks untouched.
 
+Examples
+pigIt('Pig latin is cool'); // igPay atinlay siay oolcay
+pigIt('Hello world !');     // elloHay orldway !
 
+```
+public class PigLatin {
+    public static String pigIt(String str) {
+        // Write code here
+    }
+}
+```
 
+// Versie 1
+- neem elk woord in de zin 
+- haal de letter aan het begin weg
+- plak die letter aan het einde
+- plak er "ay" achter
+- en zet die nieuwe woorden aan elkaar
 
+// Versie 2: hoe haal ik de woorden uit de zin? Wel, ik kan zoeken op de String API naar iets dat me iets geeft als een lijst of array van strings... https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html . split lijkt me wel handig! En ik moet nog een soort loop maken
 
+// Versie 2
+- splits de zin op in woorden
+- voor elk woord in de zin\
+  - haal de letter aan het begin weg
+  - plak die letter aan het einde
+  - plak er "ay" achter
+  - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin.
+  
+// Versie 3: moet dus nog een gecodeerde zin maken.
+- maak een nieuwe, lege zin (die ik bv pigLatin noem)
+- splits de originele zin op in woorden
+- voor elk woord in de zin:
+  - haal de letter aan het begin weg
+  - plak die letter aan het einde
+  - plak er "ay" achter
+  - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin.
+- geef de gecodeerde zin terug
+
+Ik check dit, het ziet er goed uit. Ik fuseer het met de opdrachtcode:
+```
+public class PigLatin {
+    public static String pigIt(String str) {
+        - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+- splits de originele zin op in woorden
+- voor elk woord in de zin:
+  - haal de letter aan het begin weg
+  - plak die letter aan het einde
+  - plak er "ay" achter
+  - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin.
+- geef de gecodeerde zin terug
+        
+    }
+}
+```
+
+Becommentarieer het en vertaal voorzover mogelijk:
+```
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          String pigWord = word.substring(1);
+          //- plak die letter aan het einde
+          pigWord += word[0];
+          // - plak er "ay" achter
+          pigWord += "ay"
+          // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+         pigLatinSentence += pigWord + " ";  
+       }
+      //- geef de gecodeerde zin terug
+      return pigLatinSentence;  
+    }
+}
+```
+
+Nu zegt mijn intuitie dat ik iets wantrouwig moet zijn: allereerst wil ik niet dat de zin eindigt met een spatie, maar ten tweede wil ik niet ! in een !ay omzetten...
+
+Bij het testen ziet de compiler uberhaupt twee fouten (vergeten ;, en word[0] moet natuurlijk word.charAt(0) zijn, dit is geen Kotlin... Maar de spatie aan het einde frustreert me meer; nu heeft Java (het is handig de String API door te lezen) een join methode die alleen op tussenliggende plekken spaties zet. Dat vind ik netter dan na elk woord een spatie zetten en die aan het eind weer weghalen. Dus zonder de bugs en met String.join wordt het iets als
+
+```
+import java.util.*;
+
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          String pigWord = word.substring(1);
+          //- plak die letter aan het einde
+          pigWord += word.charAt(0);
+          // - plak er "ay" achter
+          pigWord += "ay";
+          // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+          pigLatinWords.add(pigWord)
+       }
+      //- geef de gecodeerde zin terug
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+Nu bleek er WEER een ; te ontbreken (Kotlin-gewoonte)
+
+```
+import java.util.*;
+
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          String pigWord = word.substring(1);
+          //- plak die letter aan het einde
+          pigWord += word.charAt(0);
+          // - plak er "ay" achter
+          pigWord += "ay";
+          // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+          pigLatinWords.add(pigWord);
+       }
+      //- geef de gecodeerde zin terug
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+maar ernstiger is dat er inderdaad een probleem komt met het uitroepteken. Laat ik aannemen dat 1 karakter te weinig is, dan worden leestekens overgeslagen. De pseudocode EN het programma aanpassend
+
+```
+import java.util.*;
+
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          // WOORDEN VAN 1 letter (dus automatisch leestekens) moeten niet 'verpigt' worden;
+          if (word.length() == 1) pigLatinWords.add(word);
+          else {
+            String pigWord = word.substring(1);
+            //- plak die letter aan het einde
+            pigWord += word.charAt(0);
+            // - plak er "ay" achter
+            pigWord += "ay";
+            // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+            pigLatinWords.add(pigWord);
+          }
+       }
+      //- geef de gecodeerde zin terug
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+Wel, de tests zeggen dat het dus NIET geldt voor woorden van 1 letter. Ik zorg dus dat het niet-piggen alleen voor niet-letters geldt (karakterklasse), en draai de if-else om (ook voor "...", dat moet ook niet gepigd worden)
+
+```
+import java.util.*;
+
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          // WOORDEN VAN 1 letter (dus automatisch leestekens) moeten niet 'verpigt' worden;
+          if (Character.isLetter(word.charAt(0))) {
+            String pigWord = word.substring(1);
+            //- plak die letter aan het einde
+            pigWord += word.charAt(0);
+            // - plak er "ay" achter
+            pigWord += "ay";
+            // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+            pigLatinWords.add(pigWord);
+          }
+       } else pigLatinWords.add(word);
+      //- geef de gecodeerde zin terug
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+en de else goed zettend...
+
+```
+import java.util.*;
+
+public class PigLatin {
+    public static String pigIt(String str) {
+        // - maak een nieuwe, lege zin (die ik bv pigLatin noem)
+        String pigLatinSentence = "";
+        // - splits de originele zin op in woorden
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        // - voor elk woord in de zin:
+        for (String word : words) {
+          // - haal de letter aan het begin weg
+          // ! NOOT: ik besef nu dat een String onveranderbaar is. Dus ik maak een nieuw word, pigWord, waar ik alle karakters behalve het eerste naar kopieer
+          // WOORDEN VAN 1 letter (dus automatisch leestekens) moeten niet 'verpigt' worden;
+          if (Character.isLetter(word.charAt(0))) {
+            String pigWord = word.substring(1);
+            //- plak die letter aan het einde
+            pigWord += word.charAt(0);
+            // - plak er "ay" achter
+            pigWord += "ay";
+            // - en zet het nieuwe woord aan het einde van de 'gecodeerde' zin. (ik zie overigens nu dat er nog een spatie achter moet!)
+            pigLatinWords.add(pigWord);
+          } else pigLatinWords.add(word);
+       } 
+      //- geef de gecodeerde zin terug
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+Dat werkt eindelijk! Ik ruim de commentaren/pseudocode op
+
+```
+import java.util.*;
+
+public class PigLatin {
+    // convert a sentence into Pig Latin
+    public static String pigIt(String str) {
+        String pigLatinSentence = "";
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        for (String word : words) {
+          if (Character.isLetter(word.charAt(0))) {
+            String pigWord = word.substring(1);
+            pigWord += word.charAt(0);
+            pigWord += "ay";
+            pigLatinWords.add(pigWord);
+          } else pigLatinWords.add(word);
+       } 
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+Ik zie nu dat ik het pigWord in 1 regel zou kunnen maken...
+
+```
+import java.util.*;
+
+public class PigLatin {
+    // convert a sentence into Pig Latin
+    public static String pigIt(String str) {
+        String pigLatinSentence = "";
+        String[] words = str.split(" ");
+        List<String> pigLatinWords = new ArrayList<>();
+        for (String word : words) {
+          if (Character.isLetter(word.charAt(0))) {
+            String pigWord = word.substring(1) + word.charAt(0) + "ay";
+            pigLatinWords.add(pigWord);
+          } else pigLatinWords.add(word); // handle punctuation marks and numbers
+       } 
+      return String.join(" ", pigLatinWords);  
+    }
+}
+```
+
+Dit ziet er goed uit!
 
 
