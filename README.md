@@ -104,6 +104,233 @@ Ik test het, en het werkt. Laatste fase: verwijder overbodige commentaren, en ve
 }
 ```
 
+De 7e kyu: vowel count (https://www.codewars.com/kata/54ff3102c1bad923760001f3/train/java)
+```
+Return the number (count) of vowels in the given string.
+
+We will consider a, e, i, o, u as vowels for this Kata (but not y).
+
+The input string will only consist of lower case letters and/or spaces.
+
+public class Vowels {
+
+  public static int getCount(String str) {
+    return 0;
+  }
+
+}
+```
+
+// Versie 1
+-ga elk karakter van de String na 
+-als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+-geef de score terug
+
+Ik lees het door: ik heb nergens een score gedefinieerd!
+// Versie 1
+-zet de score op 0
+-ga elk karakter van de string na 
+-als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+-geef de score terug
+
+De code kopieren en de pseudocode invullen:
+
+```
+public class Vowels {
+
+  public static int getCount(String str) {
+  -zet de score op 0
+-ga elk karakter van de string na 
+-als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+-geef de score terug
+    return 0;
+  }
+}
+```
+
+Nu de pseudocode omzetten in commentaren, en vertalen naar Java
+```
+public class Vowels {
+
+  public static int getCount(String str) {
+   // -zet de score op 0
+   int score = 0;
+   // -ga elk karakter van de string na 
+   for (char character : str) {
+      // -als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+      if (character  == 'a' || character  == 'e' || character  == 'i' || character  == 'o' || character  == 'u') score++;
+    }
+    // -geef de score terug
+    return score;
+  }
+}
+```
+
+Ik test hem...  (zie dat ik vergeten was dat enhanced for-loops in Java niet over Strings lopen, moet hem eerst omzetten in een charArray
+
+```
+public class Vowels {
+
+  public static int getCount(String str) {
+   // -zet de score op 0
+   int score = 0;
+   // -ga elk karakter van de string na 
+   for (char character : str.toCharArray()) {
+      // -als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+      if (character  == 'a' || character  == 'e' || character  == 'i' || character  == 'o' || character  == 'u') score++;
+    }
+    // -geef de score terug
+    return score;
+  }
+}
+```
+
+Dit werkt. Weer ruim ik het commentaar op en verengels waar ik het houd
+
+```
+public class Vowels {
+
+  // return the number of vowels ('a', 'e', 'i', 'o' and 'u') in the String
+  public static int getCount(String str) {
+   int score = 0;
+   for (char character : str.toCharArray()) {
+      if (character  == 'a' || character  == 'e' || character  == 'i' || character  == 'o' || character  == 'u') score++;
+    }
+    return score;
+  }
+}
+```
+
+Nu vind ik " if (character  == 'a' || character  == 'e' || character  == 'i' || character  == 'o' || character  == 'u')" wat lang. Ik bedoel: als het karakter een klinker is. Nu kent de computer geen klinkers (zie ik aan de Character-API), maar je zou klinkers wel kunnen beschouwen als een verzameling letters. Dus ik verander de code nog eens:
+
+```
+public class Vowels {
+  private static final Set<Character> VOWELS = Set.of('a','e','i','o','u');
+
+  // return the number of vowels ('a', 'e', 'i', 'o' and 'u') in the String
+  public static int getCount(String str) {
+   int score = 0;
+   for (char character : str.toCharArray()) {
+      if (VOWELS.contains(character)) score++;
+    }
+    return score;
+  }
+}
+```
+
+en niet de java.util.* vergeten voor de set...
+
+```
+import java.util.*;
+
+public class Vowels {
+  private static final Set<Character> VOWELS = Set.of('a','e','i','o','u');
+
+  // return the number of vowels ('a', 'e', 'i', 'o' and 'u') in the String
+  public static int getCount(String str) {
+   int score = 0;
+   for (char character : str.toCharArray()) {
+      if (VOWELS.contains(character)) score++;
+    }
+    return score;
+  }
+}
+```
+
+Als je eenmaal een algoritme hebt bedacht, kun je altijd nog code verbeteren; pseudocode is niet in steen geschreven!
+
+Op naar de 6e kyu...
+
+https://www.codewars.com/kata/514b92a657cdc65150000006/train/java
+
+If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+
+Finish the solution so that it returns the sum of all the multiples of 3 or 5 below the number passed in. Additionally, if the number is negative, return 0 (for languages that do have them).
+
+Note: If the number is a multiple of both 3 and 5, only count it once.
+
+```
+public class Solution {
+
+  public int solution(int number) {
+    //TODO: Code stuff here
+  }
+}
+```
+
+Ik lees de beschrijving, dus
+
+// Versie 1
+-als number < 0 is, return 0
+-doe voor elk nummer van 0 tot 'number' (niet inclusief 'number')
+  -als het getal een meervoud van drie of van vijf is, tel het op bij de som
+-geef de som terug
+
+// Versie 2
+// ik zie dat als ik begin bij 0 en loop tot 'number', ik bij negatieve getallen automatisch geen getallen krijg.
+// en dat ik natuurlijk een som moet definieren en op 0 moet zetten
+- zet de som op 0.
+- doe voor elk nummer van 0 tot kleiner dan 'number'
+  -als het getal een meervoud van drie of van vijf is, tel het op bij de som
+- geef de som terug
+
+// Versie 3: hoe weet ik dat het een meervoud is van 3 of 5? Wel, de modulus-operator
+- zet de som op 0.
+- doe voor elk nummer van 0 tot kleiner dan 'number'
+  -als het getal modulus drie nul is, of het getal modulus vijf nul is, tel het op bij de som
+- geef de som terug
+
+Dat ziet er doenlijk uit! Ik plak het in de code 
+
+``` 
+public class Solution {
+
+  public int solution(int number) {
+    - zet de som op 0.
+- doe voor elk nummer van 0 tot kleiner dan 'number'
+  -als het getal modulus drie nul is, of het getal modulus vijf nul is, tel het op bij de som
+- geef de som terug
+  }
+}
+```
+
+En maak er commentaren van die ik uitwerk
+```
+public class Solution {
+
+  public int solution(int number) {
+    // - zet de som op 0.
+    int sum = 0;
+    // - doe voor elk nummer van 0 tot kleiner dan 'number'
+    for (int i = 0; i < number; i++) {
+       //-als het getal modulus drie nul is, of het getal modulus vijf nul is, tel het op bij de som
+       if (i % 3 == 0 || i % 5 == 0) sum += i;
+    }
+    // - geef de som terug
+    return sum;
+  }
+}
+```
+
+Ik test het, en ruim daarna het overbodige commentaar op 
+
+```
+public class Solution {
+
+  // returns the sum of all numbers from [0..`number`> that are divisible by 3 and/or 5. If `number` is negative, returns 0.
+  public int solution(int number) {
+    int sum = 0;
+    for (int i = 0; i < number; i++) {
+       if (i % 3 == 0 || i % 5 == 0) sum += i;
+    }
+    return sum;
+  }
+}
+```
+Ik zou dit waarschijnlijk kunnen doen met een lambda en een range, maar daar heb ik even geen zin in. In elk geval een geslaagde oplossing!
+
+
+
 
 
 
