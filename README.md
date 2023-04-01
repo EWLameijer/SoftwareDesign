@@ -770,8 +770,8 @@ public class Snail {
 - # coordinaat
   - move(direction) => nieuwe coordinaat 
   record  Coordinate(int x, int y) {
-    public Coordinate move(Direction d) {
-      return Coordinate(x + d.x(), y + d.y());
+    public Coordinate move(Direction direction) {
+      return Coordinate(x + direction.x(), y + direction.y());
     }
   }
   
