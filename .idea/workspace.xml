@@ -5,13 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2dfc5df-8517-4091-bb9b-6777f2c26d28" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/hearthstone_simulator.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hearthstone_simulator_02.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/softwaredesigndemo/Card.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/softwaredesigndemo/MinionCard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/softwaredesigndemo/SpellCard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/softwaredesigndemo/WeaponCard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/softwaredesigndemo/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
