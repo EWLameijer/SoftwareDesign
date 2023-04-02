@@ -19,4 +19,9 @@ public abstract class Card {
     public int getCost() {
         return cost;
     }
+
+    @Override
+    public String toString() {
+        return name + ": " + cost + " mana, " + description;
+    }
 }

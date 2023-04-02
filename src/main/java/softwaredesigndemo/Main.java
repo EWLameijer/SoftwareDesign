@@ -1,6 +1,9 @@
 package softwaredesigndemo;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     // https://outof.cards/hearthstone/decks/29388-warrior-basic-starter-deck
@@ -42,7 +45,41 @@ public class Main {
     final static Card VOODOO_DOCTOR = new MinionCard("Voodoo Doctor", 1, "battlecry: restore 2 health", 2, 1);
     final static Card WATER_ELEMENTAL = new MinionCard("Water Elemental", 4, "freeze any character damaged by this minion", 3, 6);
 
+    static final List<Card> basicWarrior = List.of(
+            ARCANITE_REAPER, ARCANITE_REAPER, CLEAVE, CLEAVE, CHARGE, CHARGE, EXECUTE, EXECUTE, FIERY_WAR_AXE,
+            FIERY_WAR_AXE, FROSTWOLF_GRUNT, FROSTWOLF_GRUNT, FROSTWOLF_WARLORD, FROSTWOLF_WARLORD,
+            GURUBASHI_BERSERKER, GURUBASHI_BERSERKER, HEROIC_STRIKE, HEROIC_STRIKE, KOK_KRON_ELITE, KOK_KRON_ELITE,
+            RAID_LEADER, RAID_LEADER, SEN_JIN_SHIELDMASTA, SEN_JIN_SHIELDMASTA, SHIELD_BLOCK, SHIELD_BLOCK,
+            WARSONG_COMMANDER, WARSONG_COMMANDER, WHIRLWIND, WHIRLWIND);
+    static final Deck warriorDeck = new Deck(basicWarrior);
+    static final List<Card> basicMage = List.of(
+            ARCANE_EXPLOSION, ARCANE_EXPLOSION, ARCANE_INTELLECT, ARCANE_INTELLECT, ARCANE_MISSILES, ARCANE_MISSILES,
+            ARCHMAGE, ARCHMAGE, DARKSCALE_HEALER, DARKSCALE_HEALER, FIREBALL, FIREBALL, FLAMESTRIKE, FLAMESTRIKE,
+            FROST_NOVA, FROST_NOVA, FROSTBOLT, FROSTBOLT, KOBOLD_GEOMANCER, KOBOLD_GEOMANCER,
+            MAGMA_RAGER, MAGMA_RAGER, MIRROR_IMAGE, MIRROR_IMAGE, POLYMORPH, POLYMORPH, VOODOO_DOCTOR, VOODOO_DOCTOR,
+            WATER_ELEMENTAL, WATER_ELEMENTAL);
+    static final Deck mageDeck = new Deck(basicMage);
+
+    final static Scanner in = new Scanner(System.in);
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        var player1Name = askForName("Player 1");
+        var player1Deck = askForDeck();
+        var player2Name = askForName("Player 2");
+        var player2Deck = askForDeck();
+        var player1 = new Player(player1Name, player1Deck);
+        var player2 = new Player(player2Name, player2Deck);
+        var Game = new Game(player1, player2);
+    }
+
+    private static Deck askForDeck() {
+        System.out.print("Warrior (W) or Mage(anything else)? ");
+        var isWarrior = in.nextLine().toUpperCase().startsWith("W");
+        return isWarrior ? warriorDeck : mageDeck;
+    }
+
+    private static String askForName(String provisionalName) {
+        System.out.print(provisionalName + ", enter your name: ");
+        return in.nextLine();
     }
 }
