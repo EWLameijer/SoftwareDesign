@@ -744,31 +744,61 @@ Dus mijn strategie is als volgt:
 Okee, dat ziet er denk ik voorlopig voldoende solide uit. Laat ik het gaan uitproberen... Invoegen in code:
 
 ```
+import java.util.*; // for Set
+
 public class Snail {
 
     public static int[] snail(int[][] array) {
-     // enjoy
+     // - maak een lege lijst van coordinaten aan
+     List<Coordinate> sortedCoordinates = new ArrayList<>();
+     // - zet de huidige richting (dx, dy) op (1, 0)
+     var currentDirection = new Direction(1, 0);
+     // - zet de huidige coordinaat op 0,0
+     var currentCoordinate = new Coordinate(0, 0);
+     // - @ genereer een set met alle geldige coordinaten 
+     Set<Coordinate> unexploredCoordinates = getAllCoordinates(array);
+     // - zolang er nog geldige coordinaten zijn in de set
+     while (!unexploredCoordinates.isEmpty()) {
+       // - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
+       unexploredCoordinates.remove(currentCoordinate);
+       sortedCoordinates.add(array[currentCoordinate.y][currentCoordinate.x]);
+       // - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
+       var candidateCoordinate = currentCoordinate.move(currentDirection);
+       if (unexploredCoordinates.contains(candidateCoordinate)) currentCoordinate = candidateCoordinate;
+       else {
+          // - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
+          currentDirection = currentDirection.turnRight();
+          currentCoordinate = currentCoordinate.move(currentDirection);
+       }
+     }
+     // - geef de lijst coordinaten terug // opzoeken hoe ik een arraylist omzet in een array via internet
+     return sortedCoordinates.toArray();
    } 
    
-   - maak een lege lijst van coordinaten aan
-- zet de huidige richting (dx, dy) op (1, 0)
-- zet de huidige coordinaat op 0,0
-- @ genereer een set met alle geldige coordinaten 
-- zolang er nog geldige coordinaten zijn in de set
-  - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
-  - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
-  - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
-- geef de lijst coordinaten terug
+   // - genereer een set met alle geldige coordinaten 
+  private Set<Coordinate> getAllCoordinates(int[][] inputArray) {
+    // VERGETEN: MAAK EEN NIEUWE SET AAN!
+    Set<Coordinate> allCoordinates = new HashSet<>();
+    // - bepaal de lengte van de array (grootste dx)
+    int xDimension = inputArray[0].length; // {{1,2,3},{4,5,6}} is an array[2][3]
+    // - bepaal de hoogte van de array 
+    int yDimension = inputArray.length;
+    //- voor elke x coordinaat van 0 tot de laatste 
+    for (int x = 0; x < xDimension) {
+      // - voor elke y-coordinaat van 0 tot de laatste 
+      for (int y = 0; y < yDimension) {
+        // - voeg deze (x,y) toe aan de set van te bezoeken coordinaten 
+        allCoordinates.add(new Coordinate(x,y));
+      }
+    }
+    // VERGETEN: GEEF DIE SET TERUG
+    return allCoordinates;
+  }
 
-- genereer een set met alle geldige coordinaten 
-  - bepaal de lengte van de array (grootste dx)
-  - bepaal de hoogte van de array 
-  - voor elke x coordinaat van 0 tot de laatste 
-    - voor elke y-coordinaat van 0 tot de laatste 
-      - voeg deze (x,y) toe aan de set van te bezoeken coordinaten 
 
-- # coordinaat
-  - move(direction) => nieuwe coordinaat 
+
+  //- # coordinaat
+  //- move(direction) => nieuwe coordinaat 
   record  Coordinate(int x, int y) {
     public Coordinate move(Direction direction) {
       return Coordinate(x + direction.x(), y + direction.y());
@@ -776,8 +806,8 @@ public class Snail {
   }
   
 
-- # direction 
-  - turnRight() => nieuwe direction    
+  //- # direction 
+  //- turnRight() => nieuwe direction    
   record Direction(int dx, int dy) {
      public Direction turnRight() {
        return new Direction(-dy, dx);
@@ -786,4 +816,196 @@ public class Snail {
 }
 ```
 
+Ik copy-plak het in IDEA, en zie gelijk een aantal fouten: static vergeten voor de getAllCoordinates, en ik moet geen lijst coordinaten teruggeven, maar een lijst ints; ik was de x++ en y++ vergeten, en bij move moet ik uiteraard new toevoegen voor Coordinate en direction.dx() en .dy() gebruiken!
 
+Nieuwe versie:
+```
+import java.util.*; // for Set
+
+public class Snail {
+
+    public static int[] snail(int[][] array) {
+        // - maak een lege lijst van coordinaten aan
+        List<Integer> sortedCoordinates = new ArrayList<>();
+        // - zet de huidige richting (dx, dy) op (1, 0)
+        var currentDirection = new Direction(1, 0);
+        // - zet de huidige coordinaat op 0,0
+        var currentCoordinate = new Coordinate(0, 0);
+        // - @ genereer een set met alle geldige coordinaten
+        Set<Coordinate> unexploredCoordinates = getAllCoordinates(array);
+        // - zolang er nog geldige coordinaten zijn in de set
+        while (!unexploredCoordinates.isEmpty()) {
+            // - verwijder de huidige coordinaat uit de set, en voeg hem toe aan het einde van de lijst gesorteerde punten
+            unexploredCoordinates.remove(currentCoordinate);
+            sortedCoordinates.add(array[currentCoordinate.y][currentCoordinate.x]);
+            // - als er een nieuwe coordinaat is op de huidige coordinaat + de huidige dx, dy, zet de huidige coordinaat op de nieuwe coordinaat
+            var candidateCoordinate = currentCoordinate.move(currentDirection);
+            if (unexploredCoordinates.contains(candidateCoordinate)) currentCoordinate = candidateCoordinate;
+            else {
+                // - roteer anders de dx, dy, vervang de huidige coordinaat door de huidige coordinaat + de nieuwe dx, dy
+                currentDirection = currentDirection.turnRight();
+                currentCoordinate = currentCoordinate.move(currentDirection);
+            }
+        }
+        // - geef de lijst coordinaten terug // opzoeken hoe ik een arraylist omzet in een array via internet
+        // https://stackoverflow.com/questions/718554/how-to-convert-an-arraylist-containing-integers-to-primitive-int-array
+        return sortedCoordinates.stream().mapToInt(i -> i).toArray();
+    }
+
+    // - genereer een set met alle geldige coordinaten
+    private static Set<Coordinate> getAllCoordinates(int[][] inputArray) {
+        // VERGETEN: MAAK EEN NIEUWE SET AAN!
+        Set<Coordinate> allCoordinates = new HashSet<>();
+        // - bepaal de lengte van de array (grootste dx)
+        int xDimension = inputArray[0].length; // {{1,2,3},{4,5,6}} is an array[2][3]
+        // - bepaal de hoogte van de array
+        int yDimension = inputArray.length;
+        //- voor elke x coordinaat van 0 tot de laatste
+        for (int x = 0; x < xDimension; x++) {
+            // - voor elke y-coordinaat van 0 tot de laatste
+            for (int y = 0; y < yDimension; y++) {
+                // - voeg deze (x,y) toe aan de set van te bezoeken coordinaten
+                allCoordinates.add(new Coordinate(x, y));
+            }
+        }
+        // VERGETEN: GEEF DIE SET TERUG
+        return allCoordinates;
+    }
+
+
+    //- # coordinaat
+    //- move(direction) => nieuwe coordinaat
+    record Coordinate(int x, int y) {
+        public Coordinate move(Direction direction) {
+            return new Coordinate(x + direction.dx(), y + direction.dy());
+        }
+    }
+
+
+    //- # direction
+    //- turnRight() => nieuwe direction
+    record Direction(int dx, int dy) {
+        public Direction turnRight() {
+            return new Direction(-dy, dx);
+        }
+    }
+}
+```
+
+Mooi, het werkt in 1x! Nu ben ik me ervan bewust dat dit CodeWars is en er best een grote kans is dat iemand dit in 1 of 2 regels code heeft opgelost, maar als professioneel programmeur is het meestal beter om code af te krijgen die werkt dan dagen te besteden aan iets dat net iets mooier of eleganter is. Hoe dan ook, ik verwijder de overbodige commentaren... 
+
+```
+import java.util.*; // for Set
+
+public class Snail {
+
+    // snail sort: transform a 2D-array into a 1D-array with the first element being the top left corner of the 2D-array,
+    // spiralling in clockwise towards the middle element.
+    public static int[] snail(int[][] array) {
+        List<Integer> sortedCoordinates = new ArrayList<>();
+        var currentDirection = new Direction(1, 0);
+        var currentCoordinate = new Coordinate(0, 0);
+        Set<Coordinate> unexploredCoordinates = getAllCoordinates(array);
+        while (!unexploredCoordinates.isEmpty()) {
+            unexploredCoordinates.remove(currentCoordinate);
+            sortedCoordinates.add(array[currentCoordinate.y][currentCoordinate.x]);
+            var candidateCoordinate = currentCoordinate.move(currentDirection);
+            if (unexploredCoordinates.contains(candidateCoordinate)) currentCoordinate = candidateCoordinate;
+            else {
+                currentDirection = currentDirection.turnRight();
+                currentCoordinate = currentCoordinate.move(currentDirection);
+            }
+        }
+        // https://stackoverflow.com/questions/718554/how-to-convert-an-arraylist-containing-integers-to-primitive-int-array
+        return sortedCoordinates.stream().mapToInt(i -> i).toArray();
+    }
+
+    private static Set<Coordinate> getAllCoordinates(int[][] inputArray) {
+        Set<Coordinate> allCoordinates = new HashSet<>();
+        int xDimension = inputArray[0].length; // {{1,2,3},{4,5,6}} is an array[2][3]
+        int yDimension = inputArray.length;
+        for (int x = 0; x < xDimension; x++) {
+            for (int y = 0; y < yDimension; y++) {
+                allCoordinates.add(new Coordinate(x, y));
+            }
+        }
+        return allCoordinates;
+    }
+
+    record Coordinate(int x, int y) {
+        public Coordinate move(Direction direction) {
+            return new Coordinate(x + direction.dx(), y + direction.dy());
+        }
+    }
+
+    record Direction(int dx, int dy) {
+        public Direction turnRight() {
+            return new Direction(-dy, dx);
+        }
+    }
+}
+```
+
+Nu vind ik de snail-methode iets lang worden (meer dan 16 regels), en gebeurt er basaal 2x currentCoordinate = currentCoordinate.move(currentDirection);
+Dus ik pas het nog licht aan... En vind nu "plus" een betere benaming dan "move", want ik pas de huidige coordinaat niet aan in de move-methode...
+
+Laatste versie:
+```
+import java.util.*; // for Set
+
+public class Snail {
+
+    // snail sort: transform a 2D-array into a 1D-array with the first element being the top left corner of the 2D-array,
+    // spiralling in clockwise towards the middle element.
+    public static int[] snail(int[][] array) {
+        List<Integer> sortedCoordinates = new ArrayList<>();
+        var currentDirection = new Direction(1, 0);
+        var currentCoordinate = new Coordinate(0, 0);
+        Set<Coordinate> unexploredCoordinates = getAllCoordinates(array);
+        while (!unexploredCoordinates.isEmpty()) {
+            unexploredCoordinates.remove(currentCoordinate);
+            sortedCoordinates.add(array[currentCoordinate.y][currentCoordinate.x]);
+            if (!unexploredCoordinates.contains(currentCoordinate.plus(currentDirection)))
+                currentDirection = currentDirection.turnRight();
+            currentCoordinate = currentCoordinate.plus(currentDirection);
+        }
+        // https://stackoverflow.com/questions/718554/how-to-convert-an-arraylist-containing-integers-to-primitive-int-array
+        return sortedCoordinates.stream().mapToInt(i -> i).toArray();
+    }
+
+    private static Set<Coordinate> getAllCoordinates(int[][] inputArray) {
+        Set<Coordinate> allCoordinates = new HashSet<>();
+        int xDimension = inputArray[0].length; // {{1,2,3},{4,5,6}} is an array[2][3]
+        int yDimension = inputArray.length;
+        for (int x = 0; x < xDimension; x++) {
+            for (int y = 0; y < yDimension; y++) {
+                allCoordinates.add(new Coordinate(x, y));
+            }
+        }
+        return allCoordinates;
+    }
+
+    record Coordinate(int x, int y) {
+        public Coordinate plus(Direction direction) {
+            return new Coordinate(x + direction.dx(), y + direction.dy());
+        }
+    }
+
+    record Direction(int dx, int dy) {
+        public Direction turnRight() {
+            return new Direction(-dy, dx);
+        }
+    }
+}
+```
+
+Zo te zien niet de eenvoudigste oplossing die bedacht is, maar het werkt, dus zolang ik geen carrière ambieer in een uitermate wiskundig bedrijf denk ik dat het zo goed is!
+
+Nu vraag je je misschien af: en nu dus een 3e kyu? Persoonlijk doe ik dat liever niet, om twee redenen.
+
+Allereerst deed ik ongeveer een hele werkdag over de laatste 3e kyu die ik probeerde (de Faberge easter eggs crush test: https://www.codewars.com/kata/54cb771c9b30e8b5250011d4). Ten tweede is het voor enterprise-ontwikkelen (en voor vervolgopdrachten) belangrijker dat je een typischer industrieel probleem leert aanpakken, met meerdere klassen; en dat is niet echt het focus van CodeWars.
+
+Nu dus een complex voorbeeld met klassen!
+
+Hiervoor kies ik voor een Hearthstone-simulator. Voor degenen die het nog niet kennen: Hearthstone is een electronisch kaartspel van Blizzard/Activision/Microsoft, een soort versimpelde Magic the Gathering. Je hebt twee spelers die elk een deck hebben met 30 kaarten (maximaal 2 van elk type, slechts 1 van 'legendarische' kaarten). Er wordt een munt opgegooid over wie mag beginnen, de eerste speler krijgt 3 willekeurige kaarten uit zijn collectie, de tweede speler 4 willekeurige kaarten en een 'muntkaart'. Beide spelers beginnen met 0 mana-kristallen, telkens als een speler een beurt krijgt komt er een mana-kristal bij, tot maximaal 10. (er zijn overigens kaarten die dat beinvloeden, maar om te beginnen is dat wel voldoende detail)
+Een speler kan op zijn beurt meerdere dingen doen: een kaart spelen (wordt geplaatst op een positie aan de kant van het bord, er zijn maximaal 7 plekken aan elke kant); een 'hero power' gebruiken (voor 2 mana), en een aanval doen met één van de kaarten/wezens/minions op het bord. Elke minion heeft een attack en een health, door een aanval 
