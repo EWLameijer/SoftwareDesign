@@ -1005,7 +1005,4 @@ Nu vraag je je misschien af: en nu dus een 3e kyu? Persoonlijk doe ik dat liever
 
 Allereerst deed ik ongeveer een hele werkdag over de laatste 3e kyu die ik probeerde (de Faberge easter eggs crush test: https://www.codewars.com/kata/54cb771c9b30e8b5250011d4). Ten tweede is het voor enterprise-ontwikkelen (en voor vervolgopdrachten) belangrijker dat je een typischer industrieel probleem leert aanpakken, met meerdere klassen; en dat is niet echt het focus van CodeWars.
 
-Nu dus een complex voorbeeld met klassen!
-
-Hiervoor kies ik voor een Hearthstone-simulator. Voor degenen die het nog niet kennen: Hearthstone is een electronisch kaartspel van Blizzard/Activision/Microsoft, een soort versimpelde Magic the Gathering. Je hebt twee spelers die elk een deck hebben met 30 kaarten (maximaal 2 van elk type, slechts 1 van 'legendarische' kaarten). Er wordt een munt opgegooid over wie mag beginnen, de eerste speler krijgt 3 willekeurige kaarten uit zijn collectie, de tweede speler 4 willekeurige kaarten en een 'muntkaart'. Beide spelers beginnen met 0 mana-kristallen, telkens als een speler een beurt krijgt komt er een mana-kristal bij, tot maximaal 10. (er zijn overigens kaarten die dat beinvloeden, maar om te beginnen is dat wel voldoende detail)
-Een speler kan op zijn beurt meerdere dingen doen: een kaart spelen (wordt geplaatst op een positie aan de kant van het bord, er zijn maximaal 7 plekken aan elke kant); een 'hero power' gebruiken (voor 2 mana), en een aanval doen met één van de kaarten/wezens/minions op het bord. Elke minion heeft een attack en een health, door een aanval 
+Nu dus een complex voorbeeld met klassen! Zie hiervoor de 'hearthstone_simulator.md'.
