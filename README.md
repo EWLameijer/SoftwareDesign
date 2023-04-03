@@ -39,30 +39,30 @@ public class WrongEndHead {
 ```
 
 WrongEndHead: // versie 1
--ik krijg een array
--ik moet het eerste en laatste element ervan omwisselen
+- ik krijg een array
+- ik moet het eerste en laatste element ervan omwisselen
 // gedachte: als ik het laatste element aan het eerste element van de array toeken, verlies ik de waarde van het eerste element, dus kan ik dat niet meer omwisselen.
 // dus ik moet eerst de oorspronkelijke waarde van het eerste element opslaan
 
 WrongEndHead: // versie 2
--ik krijg een array
+ -ik krijg een array
 
--ik moet het eerste en laatste element ervan omwisselen
-  -ik sla het eerste element op in een aparte variabele
-  -ik kopieer de laatste waarde van de array naar de eerste positie van de array
-  -ik kopieer de oorspronkelijke eerste waarde van de array naar de laatste positie
-  -ik geef de array terug.
+- ik moet het eerste en laatste element ervan omwisselen
+  - ik sla het eerste element op in een aparte variabele
+  - ik kopieer de laatste waarde van de array naar de eerste positie van de array
+  - ik kopieer de oorspronkelijke eerste waarde van de array naar de laatste positie
+  - ik geef de array terug.
   
  Ik zet dat in de code:
  
  ```
  public class WrongEndHead {
   public static String[] fixTheMeerkat(String[] arr) {
-  -ik moet het eerste en laatste element ervan omwisselen
-  -ik sla het eerste element op in een aparte variabele
-  -ik kopieer de laatste waarde van de array naar de eerste positie van de array
-  -ik kopieer de oorspronkelijke eerste waarde van de array naar de laatste positie
-  -ik geef de array terug.
+  - ik moet het eerste en laatste element ervan omwisselen
+  - ik sla het eerste element op in een aparte variabele
+  - ik kopieer de laatste waarde van de array naar de eerste positie van de array
+  - ik kopieer de oorspronkelijke eerste waarde van de array naar de laatste positie
+  - ik geef de array terug.
     return null;
   }
 }
@@ -122,16 +122,16 @@ public class Vowels {
 ```
 
 // Versie 1
--ga elk karakter van de String na 
--als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
--geef de score terug
+- ga elk karakter van de String na 
+- als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+- geef de score terug
 
 Ik lees het door: ik heb nergens een score gedefinieerd!
 // Versie 1
--zet de score op 0
--ga elk karakter van de string na 
--als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
--geef de score terug
+- zet de score op 0
+- ga elk karakter van de string na 
+- als het karakter een 'a', 'e', 'i', 'o', of 'u' is, tel 1 op bij de score
+- geef de score terug
 
 De code kopieren en de pseudocode invullen:
 
@@ -261,10 +261,10 @@ public class Solution {
 Ik lees de beschrijving, dus
 
 // Versie 1
--als number < 0 is, return 0
--doe voor elk nummer van 0 tot 'number' (niet inclusief 'number')
+- als number < 0 is, return 0
+- doe voor elk nummer van 0 tot 'number' (niet inclusief 'number')
   -als het getal een meervoud van drie of van vijf is, tel het op bij de som
--geef de som terug
+- geef de som terug
 
 // Versie 2
 // ik zie dat als ik begin bij 0 en loop tot 'number', ik bij negatieve getallen automatisch geen getallen krijg.
