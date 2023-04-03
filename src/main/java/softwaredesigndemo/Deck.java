@@ -11,36 +11,33 @@ public class Deck {
         this.cards = new ArrayList<>(cards);
     }
 
-    public void mulligan(int numCardsToMulligan) {
-        Collections.shuffle(cards);
-        showFirst(numCardsToMulligan);
-        System.out.println("\nPlease give the numbers of the cards you want to mulligan (swap) (like '1 3'): ");
-        Scanner in = new Scanner(System.in);
-        String[] numbers = in.nextLine().split(" ");
-        performTheActualMulligan(numCardsToMulligan, numbers);
-        System.out.println("Your new cards:");
-        showFirst(numCardsToMulligan);
-    }
-
     private void showFirst(int numCardsToMulligan) {
         for (int i = 1; i<= numCardsToMulligan; i++) {
             System.out.println(i + ". " + cards.get(i-1));
         }
     }
 
-    private void performTheActualMulligan(int numCardsToMulligan, String[] numbers) {
-        Random random = new Random();
-        Set<Integer> swappedPositions = new HashSet<>(); // avoid swapping out card A, and returning it via another swap!
-        int swapIndex;
-        for (String cardToSwap : numbers) {
-            var cardIndex = Integer.parseInt(cardToSwap) - 1;
-            do {
-                swapIndex = random.nextInt(DECK_SIZE - numCardsToMulligan) + numCardsToMulligan;
-            } while (swappedPositions.contains(swapIndex));
-            Card replacement = cards.get(swapIndex);
-            cards.set(swapIndex, cards.get(cardIndex));
-            cards.set(cardIndex, replacement);
-            swappedPositions.add(swapIndex);
-        }
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
+    public int size() {
+        return cards.size();
+    }
+
+    public Card get(int index) {
+        if (index < 0 || index >= cards.size()) throw new IllegalArgumentException("Deck.get() error: " + index + " is out of bounds!");
+        return cards.get(index);
+    }
+
+    public void set(int index, Card card) {
+        if (index < 0 || index >= cards.size()) throw new IllegalArgumentException("Deck.set() error: " + index + " is out of bounds!");
+        cards.set(index, card);
+    }
+
+    public Card draw() {
+        var firstCard = cards.get(0);
+        cards.remove(0);
+        return firstCard;
     }
 }

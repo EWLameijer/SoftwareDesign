@@ -1,3 +1,3 @@
 package softwaredesigndemo;
 
-public record Player(String name, Deck deck) {}
+public record Player(String name, GameDeck deck) {}

@@ -3,24 +3,32 @@ package softwaredesigndemo;
 import java.util.Random;
 
 public class Game {
-    private final Player firstPlayer;
-    private final Player secondPlayer;
+    private final Side firstSide;
+    private final Side secondSide;
 
     private final Random random = new Random();
 
+
+
     public Game(Player playerA, Player playerB) {
         if (random.nextInt(2) == 0) {
-            firstPlayer = playerA;
-            secondPlayer = playerB;
+            firstSide = new Side(playerA);
+            secondSide = new Side(playerB);
         } else {
-            firstPlayer = playerB;
-            secondPlayer = playerA;
+            firstSide = new Side(playerB);
+            secondSide = new Side(playerA);
         }
-        var firstPlayerName = firstPlayer.name();
+        var firstPlayerName = firstSide.getPlayerName();
         System.out.println("The game starts! " + firstPlayerName + " begins!");
         System.out.println(firstPlayerName + ", please keep or mulligan your cards...");
-        firstPlayer.deck().mulligan(3);
-        System.out.println(secondPlayer.name() + ", please keep or mulligan your cards...");
-        secondPlayer.deck().mulligan(4);
+        firstSide.mulligan(3);
+        System.out.println(secondSide.getPlayerName()+ ", please keep or mulligan your cards...");
+        secondSide.mulligan(4);
+        Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
+        secondSide.giveCard(COIN);
+        do {
+            firstSide.giveTurn();
+            secondSide.giveTurn();
+        } while (true);
     }
 }
