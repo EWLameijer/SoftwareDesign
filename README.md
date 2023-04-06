@@ -1005,4 +1005,4 @@ Nu vraag je je misschien af: en nu dus een 3e kyu? Persoonlijk doe ik dat liever
 
 Allereerst deed ik ongeveer een hele werkdag over de laatste 3e kyu die ik probeerde (de Faberge easter eggs crush test: https://www.codewars.com/kata/54cb771c9b30e8b5250011d4). Ten tweede is het voor enterprise-ontwikkelen (en voor vervolgopdrachten) belangrijker dat je een typischer industrieel probleem leert aanpakken, met meerdere klassen; en dat is niet echt het focus van CodeWars.
 
-Nu dus een complex voorbeeld met klassen! Zie hiervoor de 'hearthstone_simulator.md'.
+Nu dus een complex voorbeeld met klassen! Zie hiervoor de 'hearthstone_simulator_0X.md'-files in de gelijknamige branches.
