@@ -1,4 +1,7 @@
-package softwaredesigndemo;
+package softwaredesigndemo.cards;
+
+import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.side.Side;
 
 public class WeaponCard extends Card {
     private final int attack;
@@ -17,6 +20,11 @@ public class WeaponCard extends Card {
 
     public int getDurability() {
         return durability;
+    }
+
+    @Override
+    public void play(Side ownSide, Side opponentsSide) {
+
     }
 }
 

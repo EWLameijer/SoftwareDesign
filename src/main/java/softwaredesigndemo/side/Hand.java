@@ -1,8 +1,14 @@
-package softwaredesigndemo;
+package softwaredesigndemo.side;
 
-import java.util.*;
+import softwaredesigndemo.cards.Card;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Hand {
+    final Random random = new Random();
     private final List<Card> cards = new ArrayList<>();
 
     public void add(Card card) {
@@ -19,19 +25,19 @@ public class Hand {
         }
     }
 
-    public void play(int index, ManaBar manaBar) {
+    public void play(int index, ManaBar manaBar, Side ownSide, Side opponentsSide) {
         if (index < 0 || index > cards.size())
             throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
         var chosenCard = cards.get(index);
-        if (chosenCard.getCost() > manaBar.getCurrentCapacity()) System.out.println("I need more mana to play that card!");
+        if (chosenCard.getCost() > manaBar.getCurrentCapacity())
+            System.out.println("I need more mana to play that card!");
         else {
             manaBar.consume(chosenCard.getCost());
-            System.out.println("Playing " +chosenCard.getName());
+            System.out.println("Playing " + chosenCard.getName());
+            chosenCard.play(ownSide, opponentsSide);
             cards.remove(index);
         }
     }
-
-    final Random random = new Random();
 
     public void mulligan(Deck deck) {
         show();

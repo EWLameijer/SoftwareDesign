@@ -1,6 +1,8 @@
-package softwaredesigndemo;
+package softwaredesigndemo.side;
 
-import java.util.Collections;
+import softwaredesigndemo.Player;
+import softwaredesigndemo.cards.Card;
+
 import java.util.Scanner;
 
 public class Side {
@@ -23,6 +25,10 @@ public class Side {
         this.playerName = player.name();
     }
 
+    public Territory getTerritory() {
+        return territory;
+    }
+
     public String getPlayerName() {
         return playerName;
     }
@@ -37,23 +43,25 @@ public class Side {
         hand.add(card);
     }
 
-    public void giveTurn() {
+    public void giveTurn(Side opponentsSide) {
         System.out.printf("It is %s's turn!%n", playerName);
         manaBar.startTurn();
 
         hand.add(deck.draw());
-        hand.show();
-        manaBar.show();
         do {
+            showStatus();
             System.out.print("Which card do you want to play? (0-9), E to end your turn: ");
             Scanner in = new Scanner(System.in);
             String choice = in.nextLine();
             if (choice.equalsIgnoreCase("E")) return;
             int chosenCardIndex = Integer.parseInt(choice);
-            hand.play(chosenCardIndex, manaBar);
-            hand.show();
-            manaBar.show();
-
+            hand.play(chosenCardIndex, manaBar, this, opponentsSide);
         } while (true);
+    }
+
+    private void showStatus() {
+        territory.show();
+        hand.show();
+        manaBar.show();
     }
 }

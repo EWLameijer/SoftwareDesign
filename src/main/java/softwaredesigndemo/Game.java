@@ -1,5 +1,9 @@
 package softwaredesigndemo;
 
+import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.cards.SpellCard;
+import softwaredesigndemo.side.Side;
+
 import java.util.Random;
 
 public class Game {
@@ -27,8 +31,8 @@ public class Game {
         Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
         secondSide.giveCard(COIN);
         do {
-            firstSide.giveTurn();
-            secondSide.giveTurn();
+            firstSide.giveTurn(secondSide);
+            secondSide.giveTurn(firstSide);
         } while (true);
     }
 }

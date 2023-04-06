@@ -1,4 +1,7 @@
-package softwaredesigndemo;
+package softwaredesigndemo.cards;
+
+import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.side.Side;
 
 public class MinionCard extends Card {
     private final int attack;
@@ -17,5 +20,12 @@ public class MinionCard extends Card {
 
     public int getHealth() {
         return health;
+    }
+
+    @Override
+    public void play(Side ownSide, Side opponentsSide) {
+        if (ownSide.getTerritory().canAddMinion()) {
+            ownSide.getTerritory().addMinion(name, attack, health);
+        } else throw new IllegalArgumentException("MinionCard.play() exception: board is full!");
     }
 }

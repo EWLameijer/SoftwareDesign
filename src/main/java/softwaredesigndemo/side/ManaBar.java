@@ -1,4 +1,4 @@
-package softwaredesigndemo;
+package softwaredesigndemo.side;
 
 public class ManaBar {
     private int maxCapacity = 0;

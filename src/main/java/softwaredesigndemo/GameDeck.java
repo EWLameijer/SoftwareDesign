@@ -1,5 +1,8 @@
 package softwaredesigndemo;
 
+import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.side.HeroType;
+
 import java.util.List;
 
 public class GameDeck {

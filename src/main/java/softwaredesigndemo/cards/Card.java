@@ -1,7 +1,10 @@
-package softwaredesigndemo;
+package softwaredesigndemo.cards;
+
+import softwaredesigndemo.side.Side;
 
 public abstract class Card {
-    private final String name;
+    protected final String name;
+
     private final int cost;
 
     private final String description;
@@ -19,6 +22,8 @@ public abstract class Card {
     public int getCost() {
         return cost;
     }
+
+    public abstract void play(Side ownSide, Side opponentsSide);
 
     @Override
     public String toString() {

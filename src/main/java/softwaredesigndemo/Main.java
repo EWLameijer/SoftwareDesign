@@ -1,6 +1,12 @@
 package softwaredesigndemo;
 
 
+import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.cards.MinionCard;
+import softwaredesigndemo.cards.SpellCard;
+import softwaredesigndemo.cards.WeaponCard;
+import softwaredesigndemo.side.HeroType;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +24,7 @@ public class Main {
     final static Card HEROIC_STRIKE = new SpellCard("Heroic Strike", 2, "give hero +4 attack this turn");
     final static Card KOK_KRON_ELITE = new MinionCard("Kok'kron Elite", 4, "charge", 4, 3);
 
-    final static Card RAID_LEADER = new MinionCard("Raid Leader ", 3, "all your other minions have +1 attack", 2, 2);
+    final static Card RAID_LEADER = new MinionCard("Raid Leader", 3, "all your other minions have +1 attack", 2, 2);
     final static Card SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "taunt", 3, 5);
     final static Card SHIELD_BLOCK = new SpellCard("Shield Block ", 3, "gain 5 armor, draw a card");
     final static Card WARSONG_COMMANDER = new MinionCard("Warsong Commander", 3, "when you summon a minion with 3 or less attack, give it Charge", 2, 3);
@@ -59,8 +65,6 @@ public class Main {
             WATER_ELEMENTAL, WATER_ELEMENTAL);
     static final GameDeck mageDeck = new GameDeck(HeroType.MAGE, basicMageCards);
 
-
-
     final static Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -81,6 +85,6 @@ public class Main {
 
     private static String askForName(String provisionalName) {
         System.out.print(provisionalName + ", enter your name: ");
-        return in.nextLine();
+        return in.nextLine().trim();
     }
 }

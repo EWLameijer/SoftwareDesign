@@ -1,4 +1,6 @@
-package softwaredesigndemo;
+package softwaredesigndemo.side;
+
+import softwaredesigndemo.cards.Card;
 
 import java.util.*;
 

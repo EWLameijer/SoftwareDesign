@@ -1,6 +1,4 @@
-package softwaredesigndemo;
-
-enum HeroType { MAGE, WARRIOR }
+package softwaredesigndemo.side;
 
 public class Hero {
     private final HeroType type;
