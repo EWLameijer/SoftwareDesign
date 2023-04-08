@@ -1,4 +1,4 @@
-## Stap 8: Wie valt wat aan?
+## Stap 9: Wie valt wat aan?
 
 Okee. We zien vijanden. Dus kunnen we aanvallen.
 
