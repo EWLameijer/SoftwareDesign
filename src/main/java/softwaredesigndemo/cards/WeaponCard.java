@@ -14,17 +14,8 @@ public class WeaponCard extends Card {
         this.durability = durability;
     }
 
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getDurability() {
-        return durability;
-    }
-
     @Override
     public void play(Side ownSide, Side opponentsSide) {
-
     }
 }
 

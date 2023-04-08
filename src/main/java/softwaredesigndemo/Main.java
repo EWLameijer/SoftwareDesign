@@ -72,7 +72,8 @@ public class Main {
         var player2Deck = askForDeck();
         var player1 = new Player(player1Name, player1Deck);
         var player2 = new Player(player2Name, player2Deck);
-        var Game = new Game(player1, player2);
+        var game = new Game(player1, player2);
+        game.play();
     }
 
     private static GameDeck askForDeck() {

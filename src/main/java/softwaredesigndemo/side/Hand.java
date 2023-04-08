@@ -1,6 +1,7 @@
 package softwaredesigndemo.side;
 
 import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.utils.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,13 @@ import java.util.Scanner;
 
 public class Hand {
     final Random random = new Random();
+
     private final List<Card> cards = new ArrayList<>();
 
     public void add(Card card) {
-        if (cards.size() >= 10) {
-            System.out.printf("You overdraw a card! %s is destroyed.\n", card.getName());
+        final int maxHandSize = 10;
+        if (cards.size() >= maxHandSize) {
+            Color.RED.println("You overdraw a card! " + card.getName() + " is destroyed.");
         } else {
             cards.add(card);
         }
@@ -29,8 +32,8 @@ public class Hand {
         if (index < 0 || index > cards.size())
             throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
         var chosenCard = cards.get(index);
-        if (chosenCard.getCost() > manaBar.getCurrentCapacity())
-            System.out.println("I need more mana to play that card!");
+        if (chosenCard.getCost() > manaBar.getAvailableMana()) // TODO: better add logic whether you can play a card to the Card class
+            Color.RED.println("I need more mana to play that card!");
         else {
             manaBar.consume(chosenCard.getCost());
             System.out.println("Playing " + chosenCard.getName());
@@ -58,8 +61,8 @@ public class Hand {
                 cards.set(naturalCardIndex, deck.get(deckSwapPosition));
                 deck.set(deckSwapPosition, cardToSwap);
             }
+            System.out.println("Your new cards:");
+            show();
         }
-        System.out.println("Your new cards:");
-        show();
     }
 }

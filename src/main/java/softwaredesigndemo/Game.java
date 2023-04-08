@@ -9,11 +9,10 @@ import java.util.Random;
 
 public class Game {
     private final Side firstSide;
+
     private final Side secondSide;
 
     private final Random random = new Random();
-
-
 
     public Game(Player playerA, Player playerB) {
         if (random.nextInt(2) == 0) {
@@ -23,6 +22,9 @@ public class Game {
             firstSide = new Side(playerB);
             secondSide = new Side(playerA);
         }
+    }
+
+    public void play() {
         var firstPlayerName = firstSide.getPlayerName();
         System.out.println("The game starts! " + firstPlayerName + " begins!");
         System.out.println(firstPlayerName + ", please keep or mulligan your cards...");

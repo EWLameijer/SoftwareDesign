@@ -1,13 +1,24 @@
 package softwaredesigndemo.utils;
 
-public enum Color { YELLOW ("\u001B[33m"), BLUE ("\u001B[34m"), RESET ("\u001B[0m");
+// https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
+public enum Color {
+    RESET("\u001B[0m"), BLUE("\u001B[34m"), RED("\u001B[31m"), YELLOW("\u001B[33m");
+
     private final String code;
 
     Color(String ansiCode) {
         code = ansiCode;
     }
 
-    public String display(String text) {
+    public void print(String text) {
+        System.out.print(code + text + Color.RESET.code);
+    }
+
+    public void println(String text) {
+        print(text + "\n");
+    }
+
+    public String color(String text) {
         return code + text + Color.RESET.code;
     }
 }

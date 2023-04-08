@@ -5,18 +5,13 @@ import softwaredesigndemo.cards.Card;
 import java.util.*;
 
 public class Deck {
-    private final static int DECK_SIZE = 30;
     private final ArrayList<Card> cards;
 
     public Deck(List<Card> cards) {
-        if (cards.size() != DECK_SIZE) throw new IllegalArgumentException("Deck(): a deck must have 30 cards, this deck has " + cards.size() );
+        final int initialDeckSize = 30;
+        if (cards.size() != initialDeckSize)
+            throw new IllegalArgumentException("Deck(): a deck must have %d cards, this deck has %d.".formatted(initialDeckSize, cards.size()));
         this.cards = new ArrayList<>(cards);
-    }
-
-    private void showFirst(int numCardsToMulligan) {
-        for (int i = 1; i<= numCardsToMulligan; i++) {
-            System.out.println(i + ". " + cards.get(i-1));
-        }
     }
 
     public void shuffle() {
@@ -28,18 +23,28 @@ public class Deck {
     }
 
     public Card get(int index) {
-        if (index < 0 || index >= cards.size()) throw new IllegalArgumentException("Deck.get() error: " + index + " is out of bounds!");
+        assertIndexIsLegal(index, "get");
         return cards.get(index);
     }
 
+    private void assertIndexIsLegal(int index, String methodName) {
+        if (index < 0 || index >= cards.size())
+            throw new IllegalArgumentException("Deck.%s() error: %d is out of bounds!".formatted(methodName, index));
+    }
+
     public void set(int index, Card card) {
-        if (index < 0 || index >= cards.size()) throw new IllegalArgumentException("Deck.set() error: " + index + " is out of bounds!");
+        assertIndexIsLegal(index, "set");
         cards.set(index, card);
     }
 
     public Card draw() {
+        if (!canDraw()) throw new IllegalStateException("Deck.draw() error: cannot draw from an empty deck!");
         var firstCard = cards.get(0);
         cards.remove(0);
         return firstCard;
+    }
+
+    public boolean canDraw() {
+        return size() > 0;
     }
 }

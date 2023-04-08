@@ -26,11 +26,9 @@ public class Minion {
         this.canAttack = properties.contains(MinionProperty.CHARGE);
     }
 
-
-
     public String getName() {
         Color color = canAttack ? Color.YELLOW : Color.BLUE;
-        return color.display(name);
+        return color.color(name);
     }
 
     public void readyForAttack() {

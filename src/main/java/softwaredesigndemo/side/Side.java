@@ -47,12 +47,15 @@ public class Side {
         System.out.printf("It is %s's turn!%n", playerName);
         manaBar.startTurn();
         territory.startTurn();
-
-        hand.add(deck.draw());
+        if (deck.canDraw()) {
+            hand.add(deck.draw());
+        } else {
+            hero.takeExhaustionDamage();
+        }
+        Scanner in = new Scanner(System.in);
         do {
             showStatus();
             System.out.print("Which card do you want to play? (0-9), E to end your turn: ");
-            Scanner in = new Scanner(System.in);
             String choice = in.nextLine();
             if (choice.equalsIgnoreCase("E")) return;
             int chosenCardIndex = Integer.parseInt(choice);

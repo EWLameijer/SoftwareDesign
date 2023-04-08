@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Territory {
-    private static final int MAX_NUM_MINIONS = 7;
     private final ArrayList<Minion> minions = new ArrayList<>();
 
     public void startTurn() {
@@ -15,11 +14,12 @@ public class Territory {
     }
 
     public boolean canAddMinion() {
-        return minions.size() < MAX_NUM_MINIONS;
+        final int maximumNumberOfMinions = 7;
+        return minions.size() < maximumNumberOfMinions;
     }
 
-    public void addMinion(String name, int attack, int health, Set<MinionProperty> properties) {
-        if (canAddMinion()) minions.add(new Minion(name, attack, health, properties));
+    public void addMinion(Minion minion) {
+        if (canAddMinion()) minions.add(minion);
         else throw new IllegalStateException("Territory.addMinion() error: cannot add a minion to a full Territory!");
     }
 

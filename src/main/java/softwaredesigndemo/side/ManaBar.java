@@ -1,24 +1,26 @@
 package softwaredesigndemo.side;
 
 public class ManaBar {
-    private int maxCapacity = 0;
-    private int currentCapacity = 0;
+    private int capacity = 0;
+    
+    private int availableMana = 0;
 
     void startTurn() {
-        if (maxCapacity < 10) maxCapacity++;
-        currentCapacity = maxCapacity;
+        final int maxCapacity = 10;
+        if (capacity < maxCapacity) capacity++;
+        availableMana = capacity;
     }
 
     void consume(int amount) {
-        if (amount < 0 || amount >currentCapacity) throw new IllegalArgumentException("ManaBar.consume() error: " + amount + "  is out of range!");
-        currentCapacity -= amount;
+        if (amount < 0 || amount > availableMana) throw new IllegalArgumentException("ManaBar.consume() error: " + amount + "  is out of range!");
+        availableMana -= amount;
     }
 
     void show() {
-        System.out.printf("MANA: %d out of %d available\n", currentCapacity, maxCapacity);
+        System.out.printf("MANA: %d out of %d available\n", availableMana, capacity);
     }
 
-    public int getCurrentCapacity() {
-        return currentCapacity;
+    public int getAvailableMana() {
+        return availableMana;
     }
 }
