@@ -3,6 +3,7 @@ package softwaredesigndemo;
 import softwaredesigndemo.cards.Card;
 import softwaredesigndemo.cards.SpellCard;
 import softwaredesigndemo.side.Side;
+import softwaredesigndemo.utils.Color;
 
 import java.util.Random;
 

@@ -1,5 +1,10 @@
 package softwaredesigndemo;
 
+import softwaredesigndemo.cards.MinionProperty;
+import softwaredesigndemo.utils.Color;
+
+import java.util.Set;
+
 public class Minion {
     private final String name;
 
@@ -9,13 +14,26 @@ public class Minion {
 
     private int currentHealth;
 
-    public Minion(String name, int attack, int health) {
+    private boolean canAttack;
+
+    private final Set<MinionProperty> properties;
+
+    public Minion(String name, int attack, int health, Set<MinionProperty> properties) {
         this.name = name;
         this.attack = attack;
         this.currentHealth = this.maxHealth = health;
+        this.properties = properties;
+        this.canAttack = properties.contains(MinionProperty.CHARGE);
     }
 
+
+
     public String getName() {
-        return name;
+        Color color = canAttack ? Color.YELLOW : Color.BLUE;
+        return color.display(name);
+    }
+
+    public void readyForAttack() {
+        canAttack = true;
     }
 }

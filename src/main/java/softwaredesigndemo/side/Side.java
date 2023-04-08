@@ -20,8 +20,8 @@ public class Side {
 
     public Side(Player player) {
         var playerDeck = player.deck();
-        this.hero = Hero.from(playerDeck.getHeroType());
-        this.deck = new Deck(playerDeck.getCards());
+        this.hero = Hero.from(playerDeck.heroType());
+        this.deck = new Deck(playerDeck.cards());
         this.playerName = player.name();
     }
 
@@ -46,6 +46,7 @@ public class Side {
     public void giveTurn(Side opponentsSide) {
         System.out.printf("It is %s's turn!%n", playerName);
         manaBar.startTurn();
+        territory.startTurn();
 
         hand.add(deck.draw());
         do {
