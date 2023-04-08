@@ -75,7 +75,7 @@ public class Side {
         char first = choice.charAt(0);
         if (Character.isDigit(first)) {
             int chosenCardIndex = Integer.parseInt(choice);
-            hand.play(chosenCardIndex, manaBar, this, opponentsSide);
+            hand.play(chosenCardIndex, this, opponentsSide);
         } else {
             if (Character.isLetter(first)) {
                 if (territory.isValidAttacker(first)) {
@@ -107,5 +107,9 @@ public class Side {
         var heroColorFunction = territory.colorEnemy(!territory.isTauntMinionPresent());
         System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHitPoints())));
         territory.showAsEnemy();
+    }
+
+    public ManaBar getManaBar() {
+        return manaBar;
     }
 }

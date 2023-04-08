@@ -10,6 +10,5 @@ public class SpellCard extends Card {
 
     @Override
     public void play(Side ownSide, Side opponentsSide) {
-
     }
 }

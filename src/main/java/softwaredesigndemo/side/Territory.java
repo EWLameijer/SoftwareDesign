@@ -8,7 +8,13 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public class Territory {
+    private final static List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
     private final ArrayList<Minion> minions = new ArrayList<>();
+
+    private static int getMinionIndex(char minionSymbol) {
+        char normalizedSymbol = Character.toUpperCase(minionSymbol);
+        return normalizedSymbol - 'A';
+    }
 
     public void startTurn() {
         minions.forEach(Minion::readyForAttack);
@@ -30,7 +36,7 @@ public class Territory {
 
     private String colorAsFriendly(Minion minion) {
         int minionIndex = minions.indexOf(minion);
-        return colorFriendly(minion).apply(minionDisplayString(minion, (char)(minionIndex+'A')));
+        return colorFriendly(minion).apply(minionDisplayString(minion, (char) (minionIndex + 'A')));
     }
 
     public UnaryOperator<String> colorFriendly(Minion minion) {
@@ -45,11 +51,9 @@ public class Territory {
         return isAttackable ? Color.RED::color : Color.PURPLE::color;
     }
 
-    private final static List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
-
     private String colorAsEnemy(Minion minion) {
         int minionIndex = minions.indexOf(minion);
-        return colorEnemy(isAttackable(minion)).apply(minionDisplayString(minion,  indexToSymbol.get(minionIndex)));
+        return colorEnemy(isAttackable(minion)).apply(minionDisplayString(minion, indexToSymbol.get(minionIndex)));
     }
 
     private String minionDisplayString(Minion minion, char minionSymbol) {
@@ -70,15 +74,12 @@ public class Territory {
         return minions.get(minionIndex).canAttack();
     }
 
-    private static int getMinionIndex(char minionSymbol) {
-        char normalizedSymbol = Character.toUpperCase(minionSymbol);
-        return normalizedSymbol - 'A';
-    }
-
     public void communicateInvalidAttacker(char minionSymbol) {
         int minionIndex = getMinionIndex(minionSymbol);
-        if (minionIndex >= minions.size()) System.out.printf("There is no minion '%c'!\n", minionIndex + 'A');
-        if (!minions.get(minionIndex).canAttack()) System.out.printf("Minion %c cannot currently attack!\n", minionIndex + 'A');
+        char standardizedMinionSymbol = (char) (minionIndex + 'A');
+        if (minionIndex >= minions.size()) System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
+        if (!minions.get(minionIndex).canAttack())
+            System.out.printf("Minion %c cannot currently attack!\n", standardizedMinionSymbol);
     }
 
     public boolean isValidAttackee(char minionSymbol) {
@@ -89,7 +90,8 @@ public class Territory {
 
     public void communicateInvalidAttackee(char minionSymbol) {
         int minionIndex = indexToSymbol.indexOf(minionSymbol);
-        if (minionIndex < 0 || minionIndex >= minions.size()) System.out.printf("There is no minion '%c'!\n", minionSymbol);
+        if (minionIndex < 0 || minionIndex >= minions.size())
+            System.out.printf("There is no minion '%c'!\n", minionSymbol);
         if (!isAttackable(minions.get(minionIndex))) System.out.println("A minion with taunt is in the way!");
     }
 
@@ -99,9 +101,9 @@ public class Territory {
     }
 
     public void disposeOfDeceased() {
-        for (int i=0; i < minions.size(); i++) {
+        for (int i = 0; i < minions.size(); i++) {
             var minion = minions.get(i);
-            if (minion.getCurrentHealth() <= 0)  {
+            if (minion.getCurrentHealth() <= 0) {
                 Color.RED.println("The " + minion.getName() + " dies!");
                 minions.remove(i);
                 i--; // needed to not skip next minion

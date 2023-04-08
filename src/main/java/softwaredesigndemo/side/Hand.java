@@ -28,17 +28,17 @@ public class Hand {
         }
     }
 
-    public void play(int index, ManaBar manaBar, Side ownSide, Side opponentsSide) {
+    public void play(int index, Side ownSide, Side opponentsSide) {
         if (index < 0 || index > cards.size())
             throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
         var chosenCard = cards.get(index);
-        if (chosenCard.getCost() > manaBar.getAvailableMana()) // TODO: better add logic whether you can play a card to the Card class
-            Color.RED.println("I need more mana to play that card!");
-        else {
-            manaBar.consume(chosenCard.getCost());
+        if (chosenCard.canPlay(ownSide, opponentsSide)) {
+            ownSide.getManaBar().consume(chosenCard.getCost());
             System.out.println("Playing " + chosenCard.getName());
             chosenCard.play(ownSide, opponentsSide);
             cards.remove(index);
+        } else {
+            chosenCard.communicateInvalidPlay(ownSide, opponentsSide);
         }
     }
 
