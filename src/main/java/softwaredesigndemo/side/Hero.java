@@ -21,4 +21,12 @@ public class Hero {
         Color.RED.println("Out of cards! You take " + ++exhaustionDamage + "damage!");
         hitPoints -= exhaustionDamage;
     }
+
+    public HeroType getType() {
+        return type;
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
+    }
 }

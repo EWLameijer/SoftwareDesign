@@ -27,11 +27,19 @@ public class Minion {
     }
 
     public String getName() {
+        return name;
+    }
+
+    public String colorAsFriendly() {
         Color color = canAttack ? Color.YELLOW : Color.BLUE;
         return color.color(name);
     }
 
     public void readyForAttack() {
         canAttack = true;
+    }
+
+    public boolean hasTaunt() {
+        return properties.contains(MinionProperty.TAUNT);
     }
 }

@@ -22,6 +22,8 @@ public class Game {
             firstSide = new Side(playerB);
             secondSide = new Side(playerA);
         }
+        firstSide.setOpponentsSide(secondSide);
+        secondSide.setOpponentsSide(firstSide);
     }
 
     public void play() {
@@ -34,8 +36,8 @@ public class Game {
         Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
         secondSide.giveCard(COIN);
         do {
-            firstSide.giveTurn(secondSide);
-            secondSide.giveTurn(firstSide);
+            firstSide.giveTurn();
+            secondSide.giveTurn();
         } while (true);
     }
 }

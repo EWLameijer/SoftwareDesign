@@ -1,10 +1,10 @@
 package softwaredesigndemo.side;
 
 import softwaredesigndemo.Minion;
-import softwaredesigndemo.cards.MinionProperty;
+import softwaredesigndemo.utils.Color;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public class Territory {
     private final ArrayList<Minion> minions = new ArrayList<>();
@@ -24,6 +24,26 @@ public class Territory {
     }
 
     public void show() {
-        System.out.printf("[%s]\n", String.join(" | ", minions.stream().map(Minion::getName).toList()));
+        System.out.printf("[%s]\n", String.join(" | ", minions.stream().map(Minion::colorAsFriendly).toList()));
+    }
+
+    public void showAsEnemy() {
+        System.out.printf("[%s]%n", String.join(" | ", minions.stream().map(this::colorAsEnemy).toList()));
+    }
+
+    public UnaryOperator<String> colorEnemy(boolean isAttackable) {
+        return isAttackable ? Color.RED::color : Color.PURPLE::color;
+    }
+
+    private String colorAsEnemy(Minion minion) {
+        return colorEnemy(isAttackable(minion)).apply(minion.getName());
+    }
+
+    private boolean isAttackable(Minion minion) {
+        return minions.stream().noneMatch(Minion::hasTaunt) || minion.hasTaunt();
+    }
+
+    public boolean isTauntMinionPresent() {
+        return minions.stream().anyMatch(Minion::hasTaunt);
     }
 }

@@ -2,6 +2,7 @@ package softwaredesigndemo.side;
 
 import softwaredesigndemo.Player;
 import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.utils.Color;
 
 import java.util.Scanner;
 
@@ -18,11 +19,17 @@ public class Side {
 
     private final String playerName;
 
+    private Side opponentsSide;
+
     public Side(Player player) {
         var playerDeck = player.deck();
         this.hero = Hero.from(playerDeck.heroType());
         this.deck = new Deck(playerDeck.cards());
         this.playerName = player.name();
+    }
+
+    public void setOpponentsSide(Side opponentsSide) {
+        this.opponentsSide = opponentsSide;
     }
 
     public Territory getTerritory() {
@@ -35,7 +42,7 @@ public class Side {
 
     public void mulligan(int numCardsToMulligan) {
         deck.shuffle();
-        for (int i=0; i < numCardsToMulligan; i++) hand.add(deck.draw());
+        for (int i = 0; i < numCardsToMulligan; i++) hand.add(deck.draw());
         hand.mulligan(deck);
     }
 
@@ -43,7 +50,7 @@ public class Side {
         hand.add(card);
     }
 
-    public void giveTurn(Side opponentsSide) {
+    public void giveTurn() {
         System.out.printf("It is %s's turn!%n", playerName);
         manaBar.startTurn();
         territory.startTurn();
@@ -64,8 +71,15 @@ public class Side {
     }
 
     private void showStatus() {
+        opponentsSide.showAsEnemy();
         territory.show();
         hand.show();
         manaBar.show();
+    }
+
+    private void showAsEnemy() {
+        var heroColorFunction = territory.colorEnemy(!territory.isTauntMinionPresent());
+        System.out.println(heroColorFunction.apply("%s (%s): %d HP".formatted(playerName, hero.getType().name(), hero.getHitPoints())));
+        territory.showAsEnemy();
     }
 }

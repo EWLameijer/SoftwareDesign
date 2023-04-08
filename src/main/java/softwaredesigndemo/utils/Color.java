@@ -2,7 +2,8 @@ package softwaredesigndemo.utils;
 
 // https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
 public enum Color {
-    RESET("\u001B[0m"), BLUE("\u001B[34m"), RED("\u001B[31m"), YELLOW("\u001B[33m");
+    RESET("\u001B[0m"), BLUE("\u001B[34m"), PURPLE("\u001B[35m"), RED("\u001B[31m"),
+    YELLOW("\u001B[33m");
 
     private final String code;
 
