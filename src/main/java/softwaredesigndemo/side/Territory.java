@@ -1,6 +1,6 @@
 package softwaredesigndemo.side;
 
-import softwaredesigndemo.Minion;
+import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class Territory {
     }
 
     private String minionDisplayString(Minion minion, char minionSymbol) {
-        return "%s %d/%d (%c)".formatted(minion.getName(), minion.getAttack(), minion.getCurrentHealth(), minionSymbol);
+        return "%s %d/%d (%c)".formatted(minion.getName(), minion.getAttack(), minion.getHealth(), minionSymbol);
     }
 
     private boolean isAttackable(Minion minion) {
@@ -79,7 +79,7 @@ public class Territory {
         char standardizedMinionSymbol = (char) (minionIndex + 'A');
         if (minionIndex >= minions.size()) System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
         if (!minions.get(minionIndex).canAttack())
-            System.out.printf("Minion %c cannot currently attack!\n", standardizedMinionSymbol);
+            Color.RED.println("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
     }
 
     public boolean isValidAttackee(char minionSymbol) {
@@ -88,11 +88,11 @@ public class Territory {
         return isAttackable(minions.get(minionIndex));
     }
 
-    public void communicateInvalidAttackee(char minionSymbol) {
-        int minionIndex = indexToSymbol.indexOf(minionSymbol);
-        if (minionIndex < 0 || minionIndex >= minions.size())
-            System.out.printf("There is no minion '%c'!\n", minionSymbol);
-        if (!isAttackable(minions.get(minionIndex))) System.out.println("A minion with taunt is in the way!");
+    public void communicateInvalidAttackee(char attackeeSymbol) {
+        int minionIndex = indexToSymbol.indexOf(attackeeSymbol);
+        if ((attackeeSymbol != Side.ENEMY_HERO_SYMBOL && minionIndex < 0) || minionIndex >= minions.size())
+            System.out.printf("There is no minion '%c'!\n", attackeeSymbol);
+        if (!isAttackable(minions.get(minionIndex))) Color.RED.println("A minion with taunt is in the way!\n");
     }
 
     public Minion getMinion(char minionSymbol) {
@@ -103,7 +103,7 @@ public class Territory {
     public void disposeOfDeceased() {
         for (int i = 0; i < minions.size(); i++) {
             var minion = minions.get(i);
-            if (minion.getCurrentHealth() <= 0) {
+            if (minion.getHealth() <= 0) {
                 Color.RED.println("The " + minion.getName() + " dies!");
                 minions.remove(i);
                 i--; // needed to not skip next minion

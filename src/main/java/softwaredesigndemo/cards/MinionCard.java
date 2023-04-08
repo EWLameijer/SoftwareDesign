@@ -1,7 +1,7 @@
 package softwaredesigndemo.cards;
 
-import softwaredesigndemo.Minion;
 import softwaredesigndemo.side.Side;
+import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
 import java.util.Set;
@@ -38,7 +38,7 @@ public class MinionCard extends Card {
 
     @Override
     public void communicateInvalidPlay(Side ownSide, Side opponentsSide) {
-        if (!super.canPlay(ownSide, opponentsSide)) super.communicateInvalidPlay(ownSide,opponentsSide);
+        if (!super.canPlay(ownSide, opponentsSide)) super.communicateInvalidPlay(ownSide, opponentsSide);
         else Color.RED.println("You can't play any more minions! The board is full!");
     }
 }

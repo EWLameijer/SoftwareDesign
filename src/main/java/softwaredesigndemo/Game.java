@@ -33,9 +33,12 @@ public class Game {
         secondSide.mulligan(4);
         Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
         secondSide.giveCard(COIN);
+        int turn = 0;
         do {
-            firstSide.giveTurn();
-            secondSide.giveTurn();
+            turn++;
+            Side activeSide = turn % 2 == 1 ? firstSide : secondSide;
+            activeSide.giveTurn();
+            if (firstSide.hasLost() || secondSide.hasLost()) break;
         } while (true);
     }
 }

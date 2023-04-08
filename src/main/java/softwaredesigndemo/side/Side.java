@@ -1,25 +1,22 @@
 package softwaredesigndemo.side;
 
-import softwaredesigndemo.Minion;
 import softwaredesigndemo.Player;
 import softwaredesigndemo.cards.Card;
+import softwaredesigndemo.side.characters.HearthStoneCharacter;
+import softwaredesigndemo.side.characters.Hero;
+import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
 import java.util.Scanner;
 
 public class Side {
+    public final static char ENEMY_HERO_SYMBOL = '*';
     private final Hero hero;
-
     private final Territory territory = new Territory();
-
     private final Deck deck;
-
     private final ManaBar manaBar = new ManaBar();
-
     private final Hand hand = new Hand();
-
     private final String playerName;
-
     private Side opponentsSide;
 
     public Side(Player player) {
@@ -66,6 +63,7 @@ public class Side {
             System.out.print("Which card do you want to play? (0-9), a letter to attack (b# lets your second " +
                     "minion attack the third minion of the opponent), or Q to end your turn: ");
             String choice = in.nextLine();
+            if (choice.isBlank()) continue;
             if (choice.equalsIgnoreCase("Q")) return;
             execute(choice);
         } while (true);
@@ -80,9 +78,9 @@ public class Side {
             if (Character.isLetter(first)) {
                 if (territory.isValidAttacker(first)) {
                     char second = choice.charAt(1);
-                    if (opponentsSide.territory.isValidAttackee(second)) {
+                    if (opponentsSide.isValidAttackee(second)) {
                         Minion attacker = territory.getMinion(first);
-                        Minion attackee = opponentsSide.territory.getMinion(second);
+                        HearthStoneCharacter attackee = opponentsSide.getAttackee(second);
                         attacker.attack(attackee);
                         disposeOfDeceasedIfAny();
                     } else opponentsSide.territory.communicateInvalidAttackee(second);
@@ -91,9 +89,20 @@ public class Side {
         }
     }
 
+    private HearthStoneCharacter getAttackee(char attackeeSymbol) {
+        if (attackeeSymbol == ENEMY_HERO_SYMBOL) return hero;
+        else return territory.getMinion(attackeeSymbol);
+    }
+
+    private boolean isValidAttackee(char attackeeSymbol) {
+        if (attackeeSymbol == ENEMY_HERO_SYMBOL && !territory.isTauntMinionPresent()) return true; // attack on hero
+        else return territory.isValidAttackee(attackeeSymbol);
+    }
+
     private void disposeOfDeceasedIfAny() {
-        territory.disposeOfDeceased();
         opponentsSide.territory.disposeOfDeceased();
+        if (opponentsSide.hero.getHealth() <= 0) Color.GREEN.println("You are victorious!");
+        territory.disposeOfDeceased();
     }
 
     private void showStatus() {
@@ -105,11 +114,15 @@ public class Side {
 
     private void showAsEnemy() {
         var heroColorFunction = territory.colorEnemy(!territory.isTauntMinionPresent());
-        System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHitPoints())));
+        System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHealth())));
         territory.showAsEnemy();
     }
 
     public ManaBar getManaBar() {
         return manaBar;
+    }
+
+    public boolean hasLost() {
+        return hero.getHealth() <= 0;
     }
 }
