@@ -1,5 +1,6 @@
 package softwaredesigndemo.side;
 
+import softwaredesigndemo.Minion;
 import softwaredesigndemo.Player;
 import softwaredesigndemo.cards.Card;
 import softwaredesigndemo.utils.Color;
@@ -62,12 +63,37 @@ public class Side {
         Scanner in = new Scanner(System.in);
         do {
             showStatus();
-            System.out.print("Which card do you want to play? (0-9), E to end your turn: ");
+            System.out.print("Which card do you want to play? (0-9), a letter to attack (b# lets your second " +
+                    "minion attack the third minion of the opponent), or Q to end your turn: ");
             String choice = in.nextLine();
-            if (choice.equalsIgnoreCase("E")) return;
+            if (choice.equalsIgnoreCase("Q")) return;
+            execute(choice);
+        } while (true);
+    }
+
+    private void execute(String choice) {
+        char first = choice.charAt(0);
+        if (Character.isDigit(first)) {
             int chosenCardIndex = Integer.parseInt(choice);
             hand.play(chosenCardIndex, manaBar, this, opponentsSide);
-        } while (true);
+        } else {
+            if (Character.isLetter(first)) {
+                if (territory.isValidAttacker(first)) {
+                    char second = choice.charAt(1);
+                    if (opponentsSide.territory.isValidAttackee(second)) {
+                        Minion attacker = territory.getMinion(first);
+                        Minion attackee = opponentsSide.territory.getMinion(second);
+                        attacker.attack(attackee);
+                        disposeOfDeceasedIfAny();
+                    } else opponentsSide.territory.communicateInvalidAttackee(second);
+                } else territory.communicateInvalidAttacker(first);
+            }
+        }
+    }
+
+    private void disposeOfDeceasedIfAny() {
+        territory.disposeOfDeceased();
+        opponentsSide.territory.disposeOfDeceased();
     }
 
     private void showStatus() {
@@ -79,7 +105,7 @@ public class Side {
 
     private void showAsEnemy() {
         var heroColorFunction = territory.colorEnemy(!territory.isTauntMinionPresent());
-        System.out.println(heroColorFunction.apply("%s (%s): %d HP".formatted(playerName, hero.getType().name(), hero.getHitPoints())));
+        System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHitPoints())));
         territory.showAsEnemy();
     }
 }

@@ -30,6 +30,10 @@ public class Minion {
         return name;
     }
 
+    public boolean canAttack() {
+        return canAttack;
+    }
+
     public String colorAsFriendly() {
         Color color = canAttack ? Color.YELLOW : Color.BLUE;
         return color.color(name);
@@ -41,5 +45,18 @@ public class Minion {
 
     public boolean hasTaunt() {
         return properties.contains(MinionProperty.TAUNT);
+    }
+
+    public void attack(Minion attackee) {
+        attackee.currentHealth -= attack;
+        currentHealth -= attackee.attack;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public int getAttack() {
+        return attack;
     }
 }
