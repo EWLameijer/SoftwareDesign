@@ -29,7 +29,7 @@ public class Hand {
     }
 
     public void play(int index, Side ownSide, Side opponentsSide) {
-        if (index < 0 || index > cards.size())
+        if (index < 0 || index >= cards.size())
             throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
         var chosenCard = cards.get(index);
         if (chosenCard.canPlay(ownSide, opponentsSide)) {

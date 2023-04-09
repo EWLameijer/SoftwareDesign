@@ -2,7 +2,7 @@ package softwaredesigndemo.side;
 
 import softwaredesigndemo.Player;
 import softwaredesigndemo.cards.Card;
-import softwaredesigndemo.side.characters.HearthStoneCharacter;
+import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.side.characters.Hero;
 import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
@@ -80,7 +80,7 @@ public class Side {
                     char second = choice.charAt(1);
                     if (opponentsSide.isValidAttackee(second)) {
                         Minion attacker = territory.getMinion(first);
-                        HearthStoneCharacter attackee = opponentsSide.getAttackee(second);
+                        HearthstoneCharacter attackee = opponentsSide.getAttackee(second);
                         attacker.attack(attackee);
                         disposeOfDeceasedIfAny();
                     } else opponentsSide.territory.communicateInvalidAttackee(second);
@@ -89,15 +89,16 @@ public class Side {
         }
     }
 
-    private HearthStoneCharacter getAttackee(char attackeeSymbol) {
+    private HearthstoneCharacter getAttackee(char attackeeSymbol) {
         if (attackeeSymbol == ENEMY_HERO_SYMBOL) return hero;
         else return territory.getMinion(attackeeSymbol);
     }
 
     private boolean isValidAttackee(char attackeeSymbol) {
-        if (attackeeSymbol == ENEMY_HERO_SYMBOL && !territory.isTauntMinionPresent()) return true; // attack on hero
+        if (attackeeSymbol == ENEMY_HERO_SYMBOL && territory.noTauntMinionsPresent()) return true; // attack on hero
         else return territory.isValidAttackee(attackeeSymbol);
     }
+
 
     private void disposeOfDeceasedIfAny() {
         opponentsSide.territory.disposeOfDeceased();
@@ -113,7 +114,7 @@ public class Side {
     }
 
     private void showAsEnemy() {
-        var heroColorFunction = territory.colorEnemy(!territory.isTauntMinionPresent());
+        var heroColorFunction = territory.colorEnemy(territory.noTauntMinionsPresent());
         System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHealth())));
         territory.showAsEnemy();
     }
@@ -124,5 +125,9 @@ public class Side {
 
     public boolean hasLost() {
         return hero.getHealth() <= 0;
+    }
+
+    public HearthstoneCharacter getHero() {
+        return hero;
     }
 }

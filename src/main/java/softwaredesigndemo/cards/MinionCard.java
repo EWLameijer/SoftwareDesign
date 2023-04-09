@@ -1,23 +1,24 @@
 package softwaredesigndemo.cards;
 
 import softwaredesigndemo.side.Side;
+import softwaredesigndemo.side.characters.Enhancement;
 import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
-import java.util.Set;
+import java.util.List;
 
 public class MinionCard extends Card {
     private final int attack;
 
     private final int health;
 
-    private final Set<MinionProperty> properties;
+    private final List<Enhancement> enhancements;
 
-    public MinionCard(String name, int cost, String description, int attack, int health, Set<MinionProperty> properties) {
+    public MinionCard(String name, int cost, String description, int attack, int health, List<Enhancement> enhancements) {
         super(name, cost, description);
         this.attack = attack;
         this.health = health;
-        this.properties = properties;
+        this.enhancements = enhancements;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class MinionCard extends Card {
     }
 
     private Minion toMinion() {
-        return new Minion(name, attack, health, properties);
+        return new Minion(name, attack, health, enhancements);
     }
 
     @Override

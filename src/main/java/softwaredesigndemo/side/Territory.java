@@ -5,15 +5,21 @@ import softwaredesigndemo.utils.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.UnaryOperator;
+import java.util.stream.IntStream;
 
 public class Territory {
-    private final static List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
+    public final static List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
     private final ArrayList<Minion> minions = new ArrayList<>();
 
     private static int getMinionIndex(char minionSymbol) {
         char normalizedSymbol = Character.toUpperCase(minionSymbol);
         return normalizedSymbol - 'A';
+    }
+
+    public int getMinionCount() {
+        return minions.size();
     }
 
     public void startTurn() {
@@ -64,8 +70,8 @@ public class Territory {
         return minions.stream().noneMatch(Minion::hasTaunt) || minion.hasTaunt();
     }
 
-    public boolean isTauntMinionPresent() {
-        return minions.stream().anyMatch(Minion::hasTaunt);
+    public boolean noTauntMinionsPresent() {
+        return minions.stream().noneMatch(Minion::hasTaunt);
     }
 
     public boolean isValidAttacker(char minionSymbol) {
@@ -109,5 +115,19 @@ public class Territory {
                 i--; // needed to not skip next minion
             }
         }
+    }
+
+    public List<Minion> getRandomMinions(int numberOfTargets) {
+        if (minions.size() < numberOfTargets)
+            throw new IllegalArgumentException("Territory.getRandomMinions() exception: not enough minions to target!");
+        var indicesToChooseFrom = new ArrayList<>(IntStream.range(0, minions.size()).boxed().toList());
+        Random random = new Random();
+        List<Minion> output = new ArrayList<>();
+        for (int targetNumber = 0; targetNumber < numberOfTargets; targetNumber++) {
+            int targetIndex = random.nextInt(minions.size() - targetNumber);
+            output.add(minions.get(indicesToChooseFrom.get(targetIndex)));
+            indicesToChooseFrom.remove(targetIndex);
+        }
+        return output;
     }
 }

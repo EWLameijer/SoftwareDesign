@@ -1,22 +1,17 @@
 package softwaredesigndemo.side.characters;
 
-import softwaredesigndemo.cards.MinionProperty;
+import java.util.List;
 
-import java.util.Set;
-
-public class Minion extends HearthStoneCharacter {
+public class Minion extends HearthstoneCharacter {
     private final String name;
 
-    private final int attack;
-    private final Set<MinionProperty> properties;
-    private boolean canAttack;
+    private boolean attackedThisTurn = false;
 
-    public Minion(String name, int attack, int health, Set<MinionProperty> properties) {
-        super(health);
+    private boolean isFirstTurn = true;
+
+    public Minion(String name, int attack, int health, List<Enhancement> enhancements) {
+        super(health, attack, enhancements);
         this.name = name;
-        this.attack = attack;
-        this.properties = properties;
-        this.canAttack = properties.contains(MinionProperty.CHARGE);
     }
 
     public String getName() {
@@ -24,27 +19,28 @@ public class Minion extends HearthStoneCharacter {
     }
 
     public boolean canAttack() {
-        return canAttack;
+        return !attackedThisTurn && (!isFirstTurn || stats.hasCharge());
     }
 
     public void readyForAttack() {
-        canAttack = true;
+        attackedThisTurn = false;
+        isFirstTurn = false;
     }
 
     public boolean hasTaunt() {
-        return properties.contains(MinionProperty.TAUNT);
+        return stats.hasTaunt();
     }
 
-    public void attack(HearthStoneCharacter attackee) {
-        attackee.currentHealth -= attack;
-        canAttack = false;
+    public void attack(HearthstoneCharacter attackee) {
+        attackee.takeDamage(stats.getAttack());
+        attackedThisTurn = true;
         if (attackee instanceof Minion otherMinion) {
             // heroes CANNOT counterattack
-            currentHealth -= otherMinion.attack;
+            takeDamage(otherMinion.stats.getAttack());
         }
     }
 
     public int getAttack() {
-        return attack;
+        return stats.getAttack();
     }
 }
