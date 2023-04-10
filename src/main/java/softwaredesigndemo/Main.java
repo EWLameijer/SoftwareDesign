@@ -1,49 +1,54 @@
 package softwaredesigndemo;
 
 
-import softwaredesigndemo.cards.Card;
-import softwaredesigndemo.cards.MinionCard;
-import softwaredesigndemo.cards.SpellCard;
-import softwaredesigndemo.cards.WeaponCard;
+import softwaredesigndemo.cards.*;
 import softwaredesigndemo.side.HeroType;
 import softwaredesigndemo.side.characters.Enhancement;
-import softwaredesigndemo.spells.SideType;
-import softwaredesigndemo.spells.TargetClassification;
-import softwaredesigndemo.spells.TargetType;
-import softwaredesigndemo.spells.UntargetedSpell;
+import softwaredesigndemo.side.characters.HearthstoneCharacter;
+import softwaredesigndemo.spells.*;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class Main {
     // https://outof.cards/hearthstone/decks/29388-warrior-basic-starter-deck
-    final static Card ARCANITE_REAPER = new WeaponCard("Arcanite Reaper", 5, "", 5, 2);
+    static final Card ARCANITE_REAPER = new WeaponCard("Arcanite Reaper", 5, "", 5, 2);
 
-    final static UntargetedSpell CLEAVE_SPELL = new UntargetedSpell(
-            (o, e) -> e.getTerritory().getMinionCount() >= 2,
-            (o, e) -> e.getTerritory().getRandomMinions(2).forEach(m -> m.takeDamage(2)));
-    final static Card CLEAVE = new SpellCard("Cleave", 2, "deal 2 damage to 2 random enemy minions", CLEAVE_SPELL);
+    static final UntargetedSpell CLEAVE_SPELL = new UntargetedSpell(
+            s -> s.opponent().getTerritory().getMinionCount() >= 2,
+            s -> s.opponent().getTerritory().getRandomMinions(2).forEach(m -> m.takeDamage(2)));
+    static final Card CLEAVE = new SpellCard("Cleave", 2, "deal 2 damage to 2 random enemy minions", CLEAVE_SPELL);
 
 
-    static final TargetClassification ALLIED_MINION = new TargetClassification(TargetType.MINION, SideType.ALLY);
-    //    final static Card CHARGE_SPELL = new TargetedSpell(
-//            (o, e) -> TargetedSpell.getTarget(ALLIED_MINION, o, e),
-//            (o, e) -> o.getTerritory().getMinion()
-//
-//    )
-    final static Card CHARGE = new SpellCard("Charge", 3, "give a friendly minion +2 attack and Charge");
-    final static Card EXECUTE = new SpellCard("Execute", 2, "destroy a damaged enemy minion");
-    final static Card FIERY_WAR_AXE = new WeaponCard("Fiery War Axe", 2, "", 3, 2);
-    final static Card FROSTWOLF_GRUNT = new MinionCard("Frostwolf Grunt", 2, "taunt", 2, 2, List.of(Enhancement.TAUNT));
-    final static Card FROSTWOLF_WARLORD = new MinionCard("Frostwolf Warlord", 5, "gain +1/+1 for each other friendly minion on the battlefield", 4, 4, List.of());
-    final static Card GURUBASHI_BERSERKER = new MinionCard("Gurubashi Berserker", 5, "whenever this minion takes damage, gain +3 attack", 2, 7, List.of());
-    final static Card HEROIC_STRIKE = new SpellCard("Heroic Strike", 2, "give hero +4 attack this turn");
-    final static Card KOK_KRON_ELITE = new MinionCard("Kok'kron Elite", 4, "", 4, 3, List.of(Enhancement.CHARGE));
-    final static Card RAID_LEADER = new MinionCard("Raid Leader", 3, "all your other minions have +1 attack", 2, 2, List.of());
-    final static Card SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "", 3, 5, List.of(Enhancement.TAUNT));
-    final static Card SHIELD_BLOCK = new SpellCard("Shield Block ", 3, "gain 5 armor, draw a card");
-    final static Card WARSONG_COMMANDER = new MinionCard("Warsong Commander", 3, "when you summon a minion with 3 or less attack, give it Charge", 2, 3, List.of());
-    final static Card WHIRLWIND = new SpellCard("Whirlwind", 1, "1 damage to ALL minions");
+    static final BiPredicate<HearthstoneCharacter, Sides> NO_FURTHER_REQUIREMENTS = (t, s) -> true;
+    static final TargetClassification ALLIED_MINION = new TargetClassification(TargetType.MINION, SideType.ALLY, NO_FURTHER_REQUIREMENTS);
+    static final TargetedSpell CHARGE_SPELL = new TargetedSpell(
+            ALLIED_MINION,
+            (t, s) -> t.enhance(stats -> stats.addProperty(MinionProperty.CHARGE).changeAttack(2)));
+    static final Card CHARGE = new SpellCard("Charge", 3, "give a friendly minion +2 attack and Charge", CHARGE_SPELL);
+
+    static final TargetedSpell EXECUTE_SPELL = new TargetedSpell(
+            new TargetClassification(TargetType.MINION, SideType.ENEMY, (t, s) -> t.getHealth() < t.getMaxHealth()),
+            (t, s) -> t.destroy());
+    static final Card EXECUTE = new SpellCard("Execute", 2, "destroy a damaged enemy minion", EXECUTE_SPELL);
+    static final Card FIERY_WAR_AXE = new WeaponCard("Fiery War Axe", 2, "", 3, 2);
+    static final Card FROSTWOLF_GRUNT = new MinionCard("Frostwolf Grunt", 2, "taunt", 2, 2, List.of(Enhancement.TAUNT));
+    static final Card FROSTWOLF_WARLORD = new MinionCard("Frostwolf Warlord", 5, "gain +1/+1 for each other friendly minion on the battlefield", 4, 4, List.of());
+    static final Card GURUBASHI_BERSERKER = new MinionCard("Gurubashi Berserker", 5, "whenever this minion takes damage, gain +3 attack", 2, 7, List.of());
+
+    static final Predicate<Sides> NO_PRECONDITIONS_FOR_UNTARGETED = s -> true;
+
+    static final UntargetedSpell HEROIC_STRIKE_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> s.own().getHero().enhance(stats -> stats.changeAttack(4), 1));
+    static final Card HEROIC_STRIKE = new SpellCard("Heroic Strike", 2, "give hero +4 attack this turn", HEROIC_STRIKE_SPELL);
+    static final Card KOK_KRON_ELITE = new MinionCard("Kok'kron Elite", 4, "", 4, 3, List.of(Enhancement.CHARGE));
+    static final Card RAID_LEADER = new MinionCard("Raid Leader", 3, "all your other minions have +1 attack", 2, 2, List.of());
+    static final Card SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "", 3, 5, List.of(Enhancement.TAUNT));
+    static final Card SHIELD_BLOCK = new SpellCard("Shield Block ", 3, "gain 5 armor, draw a card");
+    static final Card WARSONG_COMMANDER = new MinionCard("Warsong Commander", 3, "when you summon a minion with 3 or less attack, give it Charge", 2, 3, List.of());
+    static final Card WHIRLWIND = new SpellCard("Whirlwind", 1, "1 damage to ALL minions");
 
     static final List<Card> basicWarriorCards = List.of(
             ARCANITE_REAPER, ARCANITE_REAPER, CLEAVE, CLEAVE, CHARGE, CHARGE, EXECUTE, EXECUTE, FIERY_WAR_AXE,
@@ -54,21 +59,21 @@ public class Main {
 
     static final GameDeck warriorDeck = new GameDeck(HeroType.WARRIOR, basicWarriorCards);
     //https://outof.cards/hearthstone/decks/29385-mage-basic-starter-deck
-    final static Card ARCANE_EXPLOSION = new SpellCard("Arcane Explosion", 2, "deal 1 damage to all enemy minions");
-    final static Card ARCANE_INTELLECT = new SpellCard("Arcane Intellect", 3, "draw 2 cards");
-    final static Card ARCANE_MISSILES = new SpellCard("Arcane Missiles", 1, "deal 3 damage randomly split between all enemy characters");
-    final static Card ARCHMAGE = new MinionCard("Archmage", 6, "Spell Damage + 1", 4, 7, List.of());
-    final static Card DARKSCALE_HEALER = new MinionCard("Darkscale Healer", 5, "Battlecry: restore 2 health to all friendly characters", 4, 5, List.of());
-    final static Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage");
-    final static Card FLAMESTRIKE = new SpellCard("Flamestrike", 7, "deal 4 damage to all enemy minions");
-    final static Card FROST_NOVA = new SpellCard("Frost Nova", 3, "freeze all enemy minions");
-    final static Card FROSTBOLT = new SpellCard("Frostbolt", 2, "deal 3 damage to a character and Freeze it");
-    final static Card KOBOLD_GEOMANCER = new MinionCard("Kobold Geomancer", 2, "Spell Damage  +1", 2, 2, List.of());
-    final static Card MAGMA_RAGER = new MinionCard("Magma Rager", 3, "", 5, 1, List.of());
-    final static Card MIRROR_IMAGE = new SpellCard("Mirror Image", 1, "summon 2 0/2 minions with Taunt");
-    final static Card POLYMORPH = new SpellCard("Polymorph", 4, "transform a minion into a 1/1 sheep");
-    final static Card VOODOO_DOCTOR = new MinionCard("Voodoo Doctor", 1, "battlecry: restore 2 health", 2, 1, List.of());
-    final static Card WATER_ELEMENTAL = new MinionCard("Water Elemental", 4, "freeze any character damaged by this minion", 3, 6, List.of());
+    static final Card ARCANE_EXPLOSION = new SpellCard("Arcane Explosion", 2, "deal 1 damage to all enemy minions");
+    static final Card ARCANE_INTELLECT = new SpellCard("Arcane Intellect", 3, "draw 2 cards");
+    static final Card ARCANE_MISSILES = new SpellCard("Arcane Missiles", 1, "deal 3 damage randomly split between all enemy characters");
+    static final Card ARCHMAGE = new MinionCard("Archmage", 6, "Spell Damage + 1", 4, 7, List.of());
+    static final Card DARKSCALE_HEALER = new MinionCard("Darkscale Healer", 5, "Battlecry: restore 2 health to all friendly characters", 4, 5, List.of());
+    static final Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage");
+    static final Card FLAMESTRIKE = new SpellCard("Flamestrike", 7, "deal 4 damage to all enemy minions");
+    static final Card FROST_NOVA = new SpellCard("Frost Nova", 3, "freeze all enemy minions");
+    static final Card FROSTBOLT = new SpellCard("Frostbolt", 2, "deal 3 damage to a character and Freeze it");
+    static final Card KOBOLD_GEOMANCER = new MinionCard("Kobold Geomancer", 2, "Spell Damage  +1", 2, 2, List.of());
+    static final Card MAGMA_RAGER = new MinionCard("Magma Rager", 3, "", 5, 1, List.of());
+    static final Card MIRROR_IMAGE = new SpellCard("Mirror Image", 1, "summon 2 0/2 minions with Taunt");
+    static final Card POLYMORPH = new SpellCard("Polymorph", 4, "transform a minion into a 1/1 sheep");
+    static final Card VOODOO_DOCTOR = new MinionCard("Voodoo Doctor", 1, "battlecry: restore 2 health", 2, 1, List.of());
+    static final Card WATER_ELEMENTAL = new MinionCard("Water Elemental", 4, "freeze any character damaged by this minion", 3, 6, List.of());
     static final List<Card> basicMageCards = List.of(
             ARCANE_EXPLOSION, ARCANE_EXPLOSION, ARCANE_INTELLECT, ARCANE_INTELLECT, ARCANE_MISSILES, ARCANE_MISSILES,
             ARCHMAGE, ARCHMAGE, DARKSCALE_HEALER, DARKSCALE_HEALER, FIREBALL, FIREBALL, FLAMESTRIKE, FLAMESTRIKE,
@@ -77,7 +82,7 @@ public class Main {
             WATER_ELEMENTAL, WATER_ELEMENTAL);
     static final GameDeck mageDeck = new GameDeck(HeroType.MAGE, basicMageCards);
 
-    final static Scanner in = new Scanner(System.in);
+    static final Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
         var player1Name = askForName("Player 1");

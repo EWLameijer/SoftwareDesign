@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 public class Territory {
-    public final static List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
+    public static final List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
     private final ArrayList<Minion> minions = new ArrayList<>();
 
     private static int getMinionIndex(char minionSymbol) {
@@ -23,7 +23,7 @@ public class Territory {
     }
 
     public void startTurn() {
-        minions.forEach(Minion::readyForAttack);
+        minions.forEach(Minion::startTurn);
     }
 
     public boolean canAddMinion() {
@@ -83,7 +83,10 @@ public class Territory {
     public void communicateInvalidAttacker(char minionSymbol) {
         int minionIndex = getMinionIndex(minionSymbol);
         char standardizedMinionSymbol = (char) (minionIndex + 'A');
-        if (minionIndex >= minions.size()) System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
+        if (minionIndex >= minions.size()) {
+            System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
+            return;
+        }
         if (!minions.get(minionIndex).canAttack())
             Color.RED.println("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
     }
@@ -98,7 +101,8 @@ public class Territory {
         int minionIndex = indexToSymbol.indexOf(attackeeSymbol);
         if ((attackeeSymbol != Side.ENEMY_HERO_SYMBOL && minionIndex < 0) || minionIndex >= minions.size())
             System.out.printf("There is no minion '%c'!\n", attackeeSymbol);
-        if (!isAttackable(minions.get(minionIndex))) Color.RED.println("A minion with taunt is in the way!\n");
+        if (attackeeSymbol == Side.ENEMY_HERO_SYMBOL || !isAttackable(minions.get(minionIndex)))
+            Color.RED.println("A minion with taunt is in the way!\n");
     }
 
     public Minion getMinion(char minionSymbol) {

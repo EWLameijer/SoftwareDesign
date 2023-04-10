@@ -2,9 +2,11 @@ package softwaredesigndemo.side.characters;
 
 import softwaredesigndemo.cards.MinionProperty;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public class Stats {
     // TODO: Need some kind of enhancement method that increases health the FIRST time, but not on subsequent calculations.
@@ -12,7 +14,7 @@ public class Stats {
 
     private final int attack;
 
-    private final List<Enhancement> enhancements;
+    private final ArrayList<Enhancement> enhancements;
 
     private int health;
 
@@ -22,14 +24,15 @@ public class Stats {
         this.maxHealth = maxHealth;
         health = maxHealth;
         this.attack = attack;
-        this.enhancements = enhancements;
+        this.enhancements = new ArrayList<>(enhancements);
     }
 
-    private Stats(int maxHealth, int health, int attack, List<Enhancement> enhancements) {
+    private Stats(int maxHealth, int health, int attack, List<Enhancement> enhancements, Set<MinionProperty> properties) {
         this.maxHealth = maxHealth;
         this.health = health;
         this.attack = attack;
-        this.enhancements = enhancements;
+        this.enhancements = new ArrayList<>(enhancements);
+        this.properties.addAll(properties);
     }
 
     int getHealth() {
@@ -49,7 +52,7 @@ public class Stats {
     }
 
     public Stats addProperty(MinionProperty property) {
-        var statsCopy = new Stats(maxHealth, health, attack, enhancements);
+        var statsCopy = new Stats(maxHealth, health, attack, enhancements, properties);
         statsCopy.properties.add(property);
         return statsCopy;
     }
@@ -64,5 +67,37 @@ public class Stats {
 
     public void takeDamage(int damage) {
         health -= damage;
+    }
+
+    public Stats changeAttack(int attackChange) {
+        return new Stats(maxHealth, health, attack + attackChange, enhancements, properties);
+    }
+
+    public void enhance(UnaryOperator<Stats> transform) {
+        enhancements.add(new Enhancement(transform));
+    }
+
+    public void enhance(UnaryOperator<Stats> transform, int turns) {
+        enhancements.add(new TemporaryEnhancement(transform, turns));
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void destroy() {
+        health = 0;
+    }
+
+    public void countDownTemporaryEnhancements() {
+        for (Enhancement enhancement : enhancements) {
+            if (enhancement instanceof TemporaryEnhancement temporaryEnhancement) {
+                temporaryEnhancement.countDown();
+            }
+        }
+        for (int i = enhancements.size() - 1; i >= 0; i--) {
+            var enhancement = enhancements.get(i);
+            if (!enhancement.isActive()) enhancements.remove(i);
+        }
     }
 }

@@ -1,12 +1,10 @@
 package softwaredesigndemo.side;
 
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.cards.Card;
 import softwaredesigndemo.utils.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Hand {
     final Random random = new Random();
@@ -22,47 +20,60 @@ public class Hand {
         }
     }
 
-    public void show() {
+    private void show(int availableMana, boolean gameHasStarted) {
         for (int i = 0; i < cards.size(); i++) {
-            System.out.println(i + ". " + cards.get(i));
+            var chosenCard = cards.get(i);
+            // don't color a card green during the mulligan
+            Color playableColor = gameHasStarted && chosenCard.getCost() <= availableMana ? Color.GREEN : Color.BLACK;
+            playableColor.println(i + ". " + chosenCard);
         }
     }
 
-    public void play(int index, Side ownSide, Side opponentsSide) {
+    public void showDuringGame(int availableMana) {
+        show(availableMana, true);
+    }
+
+    private void showAsMulligan() {
+        show(0, false);
+    }
+
+    public void play(int index, Sides sides) {
         if (index < 0 || index >= cards.size())
             throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
         var chosenCard = cards.get(index);
-        if (chosenCard.canPlay(ownSide, opponentsSide)) {
-            ownSide.getManaBar().consume(chosenCard.getCost());
+        if (chosenCard.canPlay(sides)) {
+            sides.own().getManaBar().consume(chosenCard.getCost());
             System.out.println("Playing " + chosenCard.getName());
-            chosenCard.play(ownSide, opponentsSide);
+            chosenCard.play(sides);
             cards.remove(index);
         } else {
-            chosenCard.communicateInvalidPlay(ownSide, opponentsSide);
+            chosenCard.communicateInvalidPlay(sides);
         }
     }
 
     public void mulligan(Deck deck) {
-        show();
+        showAsMulligan();
         System.out.println("\nPlease give the numbers of the cards you want to mulligan (swap) (like '1 3'): ");
         Scanner in = new Scanner(System.in);
         String[] numbers = in.nextLine().split(" ");
+
         if (!numbers[0].isEmpty()) {
+            ArrayList<Integer> validNumbers = new ArrayList<>(Arrays.stream(numbers).map(Integer::parseInt).filter(n -> n >= 0 && n < cards.size()).toList());
             List<Integer> replacementIndices = new ArrayList<>();
             do {
                 int nextRandom = random.nextInt(deck.size());
                 if (!replacementIndices.contains(nextRandom)) replacementIndices.add(nextRandom);
-            } while (replacementIndices.size() < numbers.length);
+            } while (replacementIndices.size() < validNumbers.size());
 
-            for (int replacement = 0; replacement < numbers.length; replacement++) {
-                int naturalCardIndex = Integer.parseInt(numbers[replacement]);
+            for (int replacement = 0; replacement < validNumbers.size(); replacement++) {
+                int naturalCardIndex = validNumbers.get(replacement);
                 var cardToSwap = cards.get(naturalCardIndex);
                 int deckSwapPosition = replacementIndices.get(replacement);
                 cards.set(naturalCardIndex, deck.get(deckSwapPosition));
                 deck.set(deckSwapPosition, cardToSwap);
             }
             System.out.println("Your new cards:");
-            show();
+            showAsMulligan();
         }
     }
 }

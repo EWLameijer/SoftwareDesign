@@ -1,13 +1,9 @@
 package softwaredesigndemo.spells;
 
-import softwaredesigndemo.side.Side;
-
-import java.util.function.BiConsumer;
+import softwaredesigndemo.Sides;
 
 public abstract class Spell {
-    final public BiConsumer<Side, Side> cast;
+    abstract public boolean canCast(Sides sides);
 
-    public Spell(BiConsumer<Side, Side> cast) {
-        this.cast = cast;
-    }
+    public abstract void cast(Sides sides);
 }

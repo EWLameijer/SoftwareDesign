@@ -1,6 +1,6 @@
 package softwaredesigndemo.cards;
 
-import softwaredesigndemo.side.Side;
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.utils.Color;
 
 public abstract class Card {
@@ -16,8 +16,8 @@ public abstract class Card {
         this.description = description;
     }
 
-    public boolean canPlay(Side ownSide, Side opponentsSide) {
-        return cost <= ownSide.getManaBar().getAvailableMana();
+    public boolean canPlay(Sides sides) {
+        return cost <= sides.own().getManaBar().getAvailableMana();
     }
 
     public String getName() {
@@ -28,15 +28,15 @@ public abstract class Card {
         return cost;
     }
 
-    public abstract void play(Side ownSide, Side opponentsSide);
+    public abstract void play(Sides sides);
 
     @Override
     public String toString() {
         return name + ": " + cost + " mana, " + description;
     }
 
-    public void communicateInvalidPlay(Side ownSide, Side opponentsSide) {
-        if (cost > ownSide.getManaBar().getAvailableMana())
+    public void communicateInvalidPlay(Sides sides) {
+        if (cost > sides.own().getManaBar().getAvailableMana())
             Color.RED.println("You don't have enough mana to play this card!");
     }
 }

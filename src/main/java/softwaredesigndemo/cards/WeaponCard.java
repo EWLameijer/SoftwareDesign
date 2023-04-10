@@ -1,7 +1,6 @@
 package softwaredesigndemo.cards;
 
-import softwaredesigndemo.cards.Card;
-import softwaredesigndemo.side.Side;
+import softwaredesigndemo.Sides;
 
 public class WeaponCard extends Card {
     private final int attack;
@@ -15,7 +14,7 @@ public class WeaponCard extends Card {
     }
 
     @Override
-    public void play(Side ownSide, Side opponentsSide) {
+    public void play(Sides sides) {
     }
 }
 

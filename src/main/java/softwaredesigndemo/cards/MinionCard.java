@@ -1,6 +1,6 @@
 package softwaredesigndemo.cards;
 
-import softwaredesigndemo.side.Side;
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.side.characters.Enhancement;
 import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
@@ -22,15 +22,16 @@ public class MinionCard extends Card {
     }
 
     @Override
-    public void play(Side ownSide, Side opponentsSide) {
+    public void play(Sides sides) {
+        var ownSide = sides.own();
         if (ownSide.getTerritory().canAddMinion()) {
             ownSide.getTerritory().addMinion(toMinion());
         } else throw new IllegalArgumentException("MinionCard.play() exception: board is full!");
     }
 
     @Override
-    public boolean canPlay(Side ownSide, Side opponentsSide) {
-        return super.canPlay(ownSide, opponentsSide) && ownSide.getTerritory().canAddMinion();
+    public boolean canPlay(Sides sides) {
+        return super.canPlay(sides) && sides.own().getTerritory().canAddMinion();
     }
 
     private Minion toMinion() {
@@ -38,8 +39,8 @@ public class MinionCard extends Card {
     }
 
     @Override
-    public void communicateInvalidPlay(Side ownSide, Side opponentsSide) {
-        if (!super.canPlay(ownSide, opponentsSide)) super.communicateInvalidPlay(ownSide, opponentsSide);
+    public void communicateInvalidPlay(Sides sides) {
+        if (!super.canPlay(sides)) super.communicateInvalidPlay(sides);
         else Color.RED.println("You can't play any more minions! The board is full!");
     }
 }

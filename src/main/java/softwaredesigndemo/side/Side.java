@@ -1,16 +1,16 @@
 package softwaredesigndemo.side;
 
 import softwaredesigndemo.Player;
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.cards.Card;
 import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.side.characters.Hero;
-import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
 import java.util.Scanner;
 
 public class Side {
-    public final static char ENEMY_HERO_SYMBOL = '*';
+    public static final char ENEMY_HERO_SYMBOL = '*';
     private final Hero hero;
     private final Territory territory = new Territory();
     private final Deck deck;
@@ -52,6 +52,7 @@ public class Side {
         System.out.printf("It is %s's turn!%n", playerName);
         manaBar.startTurn();
         territory.startTurn();
+        hero.startTurn();
         if (deck.canDraw()) {
             hand.add(deck.draw());
         } else {
@@ -66,27 +67,42 @@ public class Side {
             if (choice.isBlank()) continue;
             if (choice.equalsIgnoreCase("Q")) return;
             execute(choice);
-        } while (true);
+        } while (!hasLost() || !opponentsSide.hasLost());
     }
 
     private void execute(String choice) {
         char first = choice.charAt(0);
         if (Character.isDigit(first)) {
-            int chosenCardIndex = Integer.parseInt(choice);
-            hand.play(chosenCardIndex, this, opponentsSide);
+            int chosenCardIndex = Integer.parseInt(choice.substring(0, 1));
+            hand.play(chosenCardIndex, new Sides(this, opponentsSide));
         } else {
             if (Character.isLetter(first)) {
-                if (territory.isValidAttacker(first)) {
+                char attackerSymbol = Character.toUpperCase(first);
+                if (isValidAttacker(attackerSymbol)) {
                     char second = choice.charAt(1);
                     if (opponentsSide.isValidAttackee(second)) {
-                        Minion attacker = territory.getMinion(first);
+                        HearthstoneCharacter attacker = getAttacker(attackerSymbol);
                         HearthstoneCharacter attackee = opponentsSide.getAttackee(second);
                         attacker.attack(attackee);
-                        disposeOfDeceasedIfAny();
                     } else opponentsSide.territory.communicateInvalidAttackee(second);
-                } else territory.communicateInvalidAttacker(first);
+                } else communicateInvalidAttacker(attackerSymbol);
             }
         }
+        disposeOfDeceasedIfAny();
+    }
+
+    private void communicateInvalidAttacker(char attackerSymbol) {
+        if (attackerSymbol == 'H' && !getHero().canAttack()) System.out.println("Your hero cannot attack (anymore).");
+        else territory.communicateInvalidAttacker(attackerSymbol);
+    }
+
+    private boolean isValidAttacker(char attackerSymbol) {
+        return territory.isValidAttacker(attackerSymbol) || (attackerSymbol == 'H' && getHero().canAttack());
+    }
+
+    private HearthstoneCharacter getAttacker(char attackerSymbol) {
+        if (attackerSymbol == 'H') return getHero();
+        else return territory.getMinion(attackerSymbol);
     }
 
     private HearthstoneCharacter getAttackee(char attackeeSymbol) {
@@ -109,7 +125,7 @@ public class Side {
     private void showStatus() {
         opponentsSide.showAsEnemy();
         territory.show();
-        hand.show();
+        hand.showDuringGame(this.getManaBar().getAvailableMana());
         manaBar.show();
     }
 

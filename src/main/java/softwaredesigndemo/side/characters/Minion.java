@@ -5,8 +5,6 @@ import java.util.List;
 public class Minion extends HearthstoneCharacter {
     private final String name;
 
-    private boolean attackedThisTurn = false;
-
     private boolean isFirstTurn = true;
 
     public Minion(String name, int attack, int health, List<Enhancement> enhancements) {
@@ -18,12 +16,14 @@ public class Minion extends HearthstoneCharacter {
         return name;
     }
 
+    @Override
     public boolean canAttack() {
-        return !attackedThisTurn && (!isFirstTurn || stats.hasCharge());
+        return super.canAttack() && (!isFirstTurn || stats.hasCharge());
     }
 
-    public void readyForAttack() {
-        attackedThisTurn = false;
+    @Override
+    public void startTurn() {
+        super.startTurn();
         isFirstTurn = false;
     }
 
@@ -31,14 +31,6 @@ public class Minion extends HearthstoneCharacter {
         return stats.hasTaunt();
     }
 
-    public void attack(HearthstoneCharacter attackee) {
-        attackee.takeDamage(stats.getAttack());
-        attackedThisTurn = true;
-        if (attackee instanceof Minion otherMinion) {
-            // heroes CANNOT counterattack
-            takeDamage(otherMinion.stats.getAttack());
-        }
-    }
 
     public int getAttack() {
         return stats.getAttack();

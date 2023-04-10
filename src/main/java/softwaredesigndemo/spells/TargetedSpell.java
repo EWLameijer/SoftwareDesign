@@ -1,5 +1,6 @@
 package softwaredesigndemo.spells;
 
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.side.Side;
 import softwaredesigndemo.side.Territory;
 import softwaredesigndemo.side.characters.HearthstoneCharacter;
@@ -8,20 +9,40 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public class TargetedSpell extends Spell {
     private static final char FRIENDLY_HERO_SYMBOL = 'H';
 
-    private final BiFunction<Side, Side, Optional<HearthstoneCharacter>> getTarget;
-    
-    public TargetedSpell(BiFunction<Side, Side, Optional<HearthstoneCharacter>> getTarget, BiConsumer<Side, Side> cast) {
-        super(cast);
-        this.getTarget = getTarget;
+    private final TargetClassification targetClassification;
+
+    BiConsumer<HearthstoneCharacter, Sides> spellEffect;
+
+    private HearthstoneCharacter target = null;
+
+    public TargetedSpell(TargetClassification targetClassification, BiConsumer<HearthstoneCharacter, Sides> spellEffect) {
+        this.spellEffect = spellEffect;
+        this.targetClassification = targetClassification;
     }
 
-    public static Optional<HearthstoneCharacter> getTarget(TargetClassification classification, Side ownSide, Side opponentsSide) {
+    @Override
+    public boolean canCast(Sides sides) {
+        Optional<HearthstoneCharacter> optionalTarget = getTarget(targetClassification, sides);
+        if (optionalTarget.isEmpty()) return false;
+        target = optionalTarget.get();
+        return true;
+    }
+
+    @Override
+    public void cast(Sides sides) {
+        if (target == null) throw new IllegalStateException("TargetedSpell.cast() exception: no target!");
+        spellEffect.accept(target, sides);
+    }
+
+    public static Optional<HearthstoneCharacter> getTarget(TargetClassification classification, Sides sides) {
         // if it is a minion-targeting spell, check if there are any suitable minions in the first place!
+        var ownSide = sides.own();
+        var opponentsSide = sides.opponent();
+
         if (classification.targetType() == TargetType.MINION) {
             boolean canBeCast = switch (classification.sideType()) {
                 case ALLY -> hasMinions(ownSide);
@@ -38,7 +59,8 @@ public class TargetedSpell extends Spell {
             if (targetSymbol.equalsIgnoreCase("Q")) return Optional.empty();
             if (targetSymbol.length() < 1) continue;
             Optional<HearthstoneCharacter> targetCharacter = getValidTarget(targetSymbol.charAt(0), classification, ownSide, opponentsSide);
-            if (targetCharacter.isPresent()) return targetCharacter;
+            if (targetCharacter.isPresent() && classification.isValid().test(targetCharacter.get(), sides))
+                return targetCharacter;
         } while (true);
     }
 

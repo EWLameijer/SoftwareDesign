@@ -1,6 +1,6 @@
 package softwaredesigndemo.cards;
 
-import softwaredesigndemo.side.Side;
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.spells.Spell;
 
 public class SpellCard extends Card {
@@ -17,6 +17,13 @@ public class SpellCard extends Card {
     }
 
     @Override
-    public void play(Side ownSide, Side opponentsSide) {
+    public boolean canPlay(Sides sides) {
+        if (!super.canPlay(sides)) return false;
+        return spell.canCast(sides);
+    }
+
+    @Override
+    public void play(Sides sides) {
+        spell.cast(sides);
     }
 }
