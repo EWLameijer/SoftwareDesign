@@ -134,4 +134,8 @@ public class Territory {
         }
         return output;
     }
+
+    public List<Minion> getMinions() {
+        return minions;
+    }
 }

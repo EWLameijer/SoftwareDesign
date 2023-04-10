@@ -7,10 +7,14 @@ import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.side.characters.Hero;
 import softwaredesigndemo.utils.Color;
 
+import java.util.Random;
 import java.util.Scanner;
+import java.util.function.UnaryOperator;
 
 public class Side {
     public static final char ENEMY_HERO_SYMBOL = '*';
+    public static final char FRIENDLY_HERO_SYMBOL = 'H';
+
     private final Hero hero;
     private final Territory territory = new Territory();
     private final Deck deck;
@@ -53,11 +57,7 @@ public class Side {
         manaBar.startTurn();
         territory.startTurn();
         hero.startTurn();
-        if (deck.canDraw()) {
-            hand.add(deck.draw());
-        } else {
-            hero.takeExhaustionDamage();
-        }
+        drawCard();
         Scanner in = new Scanner(System.in);
         do {
             showStatus();
@@ -68,6 +68,14 @@ public class Side {
             if (choice.equalsIgnoreCase("Q")) return;
             execute(choice);
         } while (!hasLost() || !opponentsSide.hasLost());
+    }
+
+    public void drawCard() {
+        if (deck.canDraw()) {
+            hand.add(deck.draw());
+        } else {
+            hero.takeExhaustionDamage();
+        }
     }
 
     private void execute(String choice) {
@@ -92,16 +100,17 @@ public class Side {
     }
 
     private void communicateInvalidAttacker(char attackerSymbol) {
-        if (attackerSymbol == 'H' && !getHero().canAttack()) System.out.println("Your hero cannot attack (anymore).");
+        if (attackerSymbol == FRIENDLY_HERO_SYMBOL && !getHero().canAttack())
+            System.out.println("Your hero cannot attack (anymore).");
         else territory.communicateInvalidAttacker(attackerSymbol);
     }
 
     private boolean isValidAttacker(char attackerSymbol) {
-        return territory.isValidAttacker(attackerSymbol) || (attackerSymbol == 'H' && getHero().canAttack());
+        return territory.isValidAttacker(attackerSymbol) || (attackerSymbol == FRIENDLY_HERO_SYMBOL && getHero().canAttack());
     }
 
     private HearthstoneCharacter getAttacker(char attackerSymbol) {
-        if (attackerSymbol == 'H') return getHero();
+        if (attackerSymbol == FRIENDLY_HERO_SYMBOL) return getHero();
         else return territory.getMinion(attackerSymbol);
     }
 
@@ -125,13 +134,15 @@ public class Side {
     private void showStatus() {
         opponentsSide.showAsEnemy();
         territory.show();
-        hand.showDuringGame(this.getManaBar().getAvailableMana());
         manaBar.show();
+        UnaryOperator<String> colorFunction = hero.canAttack() ? Color.YELLOW::color : Color.BLUE::color;
+        hero.show(playerName, colorFunction, FRIENDLY_HERO_SYMBOL);
+        hand.showDuringGame(this.getManaBar().getAvailableMana());
     }
 
     private void showAsEnemy() {
         var heroColorFunction = territory.colorEnemy(territory.noTauntMinionsPresent());
-        System.out.println(heroColorFunction.apply("%s (%s): %d HP (*)".formatted(playerName, hero.getType().name(), hero.getHealth())));
+        hero.show(playerName, heroColorFunction, ENEMY_HERO_SYMBOL);
         territory.showAsEnemy();
     }
 
@@ -143,7 +154,14 @@ public class Side {
         return hero.getHealth() <= 0;
     }
 
-    public HearthstoneCharacter getHero() {
+    public Hero getHero() {
         return hero;
+    }
+
+    public HearthstoneCharacter getRandomTarget() {
+        int minionCount = territory.getMinionCount();
+        Random random = new Random();
+        int chosenIndex = random.nextInt(minionCount + 1); // the opposing hero is also a valid target
+        return chosenIndex == minionCount ? hero : territory.getMinions().get(chosenIndex);
     }
 }

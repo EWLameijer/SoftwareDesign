@@ -11,7 +11,6 @@ import java.util.Scanner;
 import java.util.function.BiConsumer;
 
 public class TargetedSpell extends Spell {
-    private static final char FRIENDLY_HERO_SYMBOL = 'H';
 
     private final TargetClassification targetClassification;
 
@@ -68,7 +67,7 @@ public class TargetedSpell extends Spell {
         if (Character.isLetter(targetSymbol)) {
             // is friendly
             char standardizedTargetSymbol = Character.toUpperCase(targetSymbol);
-            if (standardizedTargetSymbol == FRIENDLY_HERO_SYMBOL) {
+            if (standardizedTargetSymbol == Side.FRIENDLY_HERO_SYMBOL) {
                 return classification.sideType().matches(SideType.ALLY) && classification.targetType().matches(TargetType.HERO) ?
                         Optional.of(ownSide.getHero()) : Optional.empty();
             } else return ownSide.getTerritory().getMinionCount() > standardizedTargetSymbol - 'A' &&

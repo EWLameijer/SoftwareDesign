@@ -21,7 +21,6 @@ public class Main {
             s -> s.opponent().getTerritory().getRandomMinions(2).forEach(m -> m.takeDamage(2)));
     static final Card CLEAVE = new SpellCard("Cleave", 2, "deal 2 damage to 2 random enemy minions", CLEAVE_SPELL);
 
-
     static final BiPredicate<HearthstoneCharacter, Sides> NO_FURTHER_REQUIREMENTS = (t, s) -> true;
     static final TargetClassification ALLIED_MINION = new TargetClassification(TargetType.MINION, SideType.ALLY, NO_FURTHER_REQUIREMENTS);
     static final TargetedSpell CHARGE_SPELL = new TargetedSpell(
@@ -46,9 +45,22 @@ public class Main {
     static final Card KOK_KRON_ELITE = new MinionCard("Kok'kron Elite", 4, "", 4, 3, List.of(Enhancement.CHARGE));
     static final Card RAID_LEADER = new MinionCard("Raid Leader", 3, "all your other minions have +1 attack", 2, 2, List.of());
     static final Card SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "", 3, 5, List.of(Enhancement.TAUNT));
-    static final Card SHIELD_BLOCK = new SpellCard("Shield Block ", 3, "gain 5 armor, draw a card");
+
+    static final UntargetedSpell SHIELD_BLOCK_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> {
+                s.own().drawCard();
+                s.own().getHero().increaseArmor(5);
+            });
+    static final Card SHIELD_BLOCK = new SpellCard("Shield Block ", 3, "gain 5 armor, draw a card", SHIELD_BLOCK_SPELL);
     static final Card WARSONG_COMMANDER = new MinionCard("Warsong Commander", 3, "when you summon a minion with 3 or less attack, give it Charge", 2, 3, List.of());
-    static final Card WHIRLWIND = new SpellCard("Whirlwind", 1, "1 damage to ALL minions");
+
+    static final UntargetedSpell WHIRLWIND_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> {
+                s.own().getTerritory().getMinions().forEach(m -> m.takeDamage(1));
+                s.opponent().getTerritory().getMinions().forEach(m -> m.takeDamage(1));
+            });
+
+    static final Card WHIRLWIND = new SpellCard("Whirlwind", 1, "1 damage to ALL minions", WHIRLWIND_SPELL);
 
     static final List<Card> basicWarriorCards = List.of(
             ARCANITE_REAPER, ARCANITE_REAPER, CLEAVE, CLEAVE, CHARGE, CHARGE, EXECUTE, EXECUTE, FIERY_WAR_AXE,
@@ -59,9 +71,26 @@ public class Main {
 
     static final GameDeck warriorDeck = new GameDeck(HeroType.WARRIOR, basicWarriorCards);
     //https://outof.cards/hearthstone/decks/29385-mage-basic-starter-deck
-    static final Card ARCANE_EXPLOSION = new SpellCard("Arcane Explosion", 2, "deal 1 damage to all enemy minions");
-    static final Card ARCANE_INTELLECT = new SpellCard("Arcane Intellect", 3, "draw 2 cards");
-    static final Card ARCANE_MISSILES = new SpellCard("Arcane Missiles", 1, "deal 3 damage randomly split between all enemy characters");
+
+    static final UntargetedSpell ARCANE_EXPLOSION_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> s.opponent().getTerritory().getMinions().forEach(m -> m.takeDamage(1)));
+    static final Card ARCANE_EXPLOSION = new SpellCard("Arcane Explosion", 2, "deal 1 damage to all enemy minions", ARCANE_EXPLOSION_SPELL);
+
+    static final UntargetedSpell ARCANE_INTELLECT_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> {
+                s.own().drawCard();
+                s.own().drawCard();
+            });
+
+    static final Card ARCANE_INTELLECT = new SpellCard("Arcane Intellect", 3, "draw 2 cards", ARCANE_INTELLECT_SPELL);
+
+    static final UntargetedSpell ARCANE_MISSILES_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED,
+            s -> {
+                for (int i = 0; i < 3; i++) {
+                    s.opponent().getRandomTarget().takeDamage(1);
+                }
+            });
+    static final Card ARCANE_MISSILES = new SpellCard("Arcane Missiles", 1, "deal 3 damage randomly split between all enemy characters", ARCANE_MISSILES_SPELL);
     static final Card ARCHMAGE = new MinionCard("Archmage", 6, "Spell Damage + 1", 4, 7, List.of());
     static final Card DARKSCALE_HEALER = new MinionCard("Darkscale Healer", 5, "Battlecry: restore 2 health to all friendly characters", 4, 5, List.of());
     static final Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage");
