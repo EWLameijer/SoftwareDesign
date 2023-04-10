@@ -58,22 +58,26 @@ public class Hand {
         String[] numbers = in.nextLine().split(" ");
 
         if (!numbers[0].isEmpty()) {
-            ArrayList<Integer> validNumbers = new ArrayList<>(Arrays.stream(numbers).map(Integer::parseInt).filter(n -> n >= 0 && n < cards.size()).toList());
-            List<Integer> replacementIndices = new ArrayList<>();
-            do {
-                int nextRandom = random.nextInt(deck.size());
-                if (!replacementIndices.contains(nextRandom)) replacementIndices.add(nextRandom);
-            } while (replacementIndices.size() < validNumbers.size());
-
-            for (int replacement = 0; replacement < validNumbers.size(); replacement++) {
-                int naturalCardIndex = validNumbers.get(replacement);
-                var cardToSwap = cards.get(naturalCardIndex);
-                int deckSwapPosition = replacementIndices.get(replacement);
-                cards.set(naturalCardIndex, deck.get(deckSwapPosition));
-                deck.set(deckSwapPosition, cardToSwap);
-            }
+            mulliganCards(deck, numbers);
             System.out.println("Your new cards:");
             showAsMulligan();
+        }
+    }
+
+    private void mulliganCards(Deck deck, String[] numbers) {
+        ArrayList<Integer> validNumbers = new ArrayList<>(Arrays.stream(numbers).map(Integer::parseInt).filter(n -> n >= 0 && n < cards.size()).toList());
+        List<Integer> replacementIndices = new ArrayList<>();
+        do {
+            int nextRandom = random.nextInt(deck.size());
+            if (!replacementIndices.contains(nextRandom)) replacementIndices.add(nextRandom);
+        } while (replacementIndices.size() < validNumbers.size());
+
+        for (int replacement = 0; replacement < validNumbers.size(); replacement++) {
+            int naturalCardIndex = validNumbers.get(replacement);
+            var cardToSwap = cards.get(naturalCardIndex);
+            int deckSwapPosition = replacementIndices.get(replacement);
+            cards.set(naturalCardIndex, deck.get(deckSwapPosition));
+            deck.set(deckSwapPosition, cardToSwap);
         }
     }
 }

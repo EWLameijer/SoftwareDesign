@@ -32,7 +32,8 @@ public abstract class Card {
 
     @Override
     public String toString() {
-        return name + ": " + cost + " mana, " + description;
+        String separatedDescription = description.isBlank() ? "" : ", " + description;
+        return name + ": " + cost + " mana" + separatedDescription;
     }
 
     public void communicateInvalidPlay(Sides sides) {

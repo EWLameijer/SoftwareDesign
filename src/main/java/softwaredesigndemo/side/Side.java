@@ -24,10 +24,10 @@ public class Side {
     private Side opponentsSide;
 
     public Side(Player player) {
-        var playerDeck = player.deck();
+        var playerDeck = player.getDeck();
         this.hero = Hero.from(playerDeck.heroType());
         this.deck = new Deck(playerDeck.cards());
-        this.playerName = player.name();
+        this.playerName = player.getName();
     }
 
     public void setOpponentsSide(Side opponentsSide) {
@@ -43,6 +43,7 @@ public class Side {
     }
 
     public void mulligan(int numCardsToMulligan) {
+        System.out.println(playerName + ", please keep or mulligan your cards...");
         deck.shuffle();
         for (int i = 0; i < numCardsToMulligan; i++) hand.add(deck.draw());
         hand.mulligan(deck);
@@ -53,11 +54,7 @@ public class Side {
     }
 
     public void giveTurn() {
-        System.out.printf("It is %s's turn!%n", playerName);
-        manaBar.startTurn();
-        territory.startTurn();
-        hero.startTurn();
-        drawCard();
+        startTurn();
         Scanner in = new Scanner(System.in);
         do {
             showStatus();
@@ -67,7 +64,15 @@ public class Side {
             if (choice.isBlank()) continue;
             if (choice.equalsIgnoreCase("Q")) return;
             execute(choice);
-        } while (!hasLost() || !opponentsSide.hasLost());
+        } while (isAlive() && opponentsSide.isAlive());
+    }
+
+    private void startTurn() {
+        System.out.printf("It is %s's turn!%n", playerName);
+        manaBar.startTurn();
+        territory.startTurn();
+        hero.startTurn();
+        drawCard();
     }
 
     public void drawCard() {
@@ -89,8 +94,8 @@ public class Side {
                 if (isValidAttacker(attackerSymbol)) {
                     char second = choice.charAt(1);
                     if (opponentsSide.isValidAttackee(second)) {
-                        HearthstoneCharacter attacker = getAttacker(attackerSymbol);
-                        HearthstoneCharacter attackee = opponentsSide.getAttackee(second);
+                        var attacker = getAttacker(attackerSymbol);
+                        var attackee = opponentsSide.getAttackee(second);
                         attacker.attack(attackee);
                     } else opponentsSide.territory.communicateInvalidAttackee(second);
                 } else communicateInvalidAttacker(attackerSymbol);
@@ -124,7 +129,6 @@ public class Side {
         else return territory.isValidAttackee(attackeeSymbol);
     }
 
-
     private void disposeOfDeceasedIfAny() {
         opponentsSide.territory.disposeOfDeceased();
         if (opponentsSide.hero.getHealth() <= 0) Color.GREEN.println("You are victorious!");
@@ -150,8 +154,8 @@ public class Side {
         return manaBar;
     }
 
-    public boolean hasLost() {
-        return hero.getHealth() <= 0;
+    public boolean isAlive() {
+        return hero.getHealth() > 0;
     }
 
     public Hero getHero() {

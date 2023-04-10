@@ -8,7 +8,9 @@ import java.util.function.UnaryOperator;
 
 public class Hero extends HearthstoneCharacter {
     static final int MAXIMUM_HP = 30;
+
     private final HeroType type;
+
     private int exhaustionDamage = 0;
 
     private int armor = 0;
@@ -46,9 +48,9 @@ public class Hero extends HearthstoneCharacter {
     }
 
     public void show(String playerName, UnaryOperator<String> colorFunction, char symbol) {
-        String armorString = armor > 0 ? " [+" + armor + " ARMOR]" : "";
-        String attackString = stats.getAttack() > 0 ? "<" + stats.getAttack() + " ATTACK>" : "";
+        String armorText = armor > 0 ? " [+" + armor + " ARMOR]" : "";
+        String attackText = stats.getAttack() > 0 ? "<" + stats.getAttack() + " ATTACK>" : "";
         System.out.println(colorFunction.apply("%s (%s): %d HP%s %s(%c)".
-                formatted(playerName, getType().name(), getHealth(), armorString, attackString, symbol)));
+                formatted(playerName, getType().name(), getHealth(), armorText, attackText, symbol)));
     }
 }

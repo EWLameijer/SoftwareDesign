@@ -11,7 +11,9 @@ public class Game {
 
     private final Side secondSide;
 
-    public Game(Player playerA, Player playerB) {
+    public Game() {
+        var playerA = new Player("Player 1");
+        var playerB = new Player("Player 2");
         Random random = new Random();
         if (random.nextInt(2) == 0) {
             firstSide = new Side(playerA);
@@ -25,11 +27,8 @@ public class Game {
     }
 
     public void play() {
-        var firstPlayerName = firstSide.getPlayerName();
-        System.out.println("The game starts! " + firstPlayerName + " begins!");
-        System.out.println(firstPlayerName + ", please keep or mulligan your cards...");
+        System.out.println("The game starts! " + firstSide.getPlayerName() + " begins!");
         firstSide.mulligan(3);
-        System.out.println(secondSide.getPlayerName() + ", please keep or mulligan your cards...");
         secondSide.mulligan(4);
         Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
         secondSide.giveCard(COIN);
@@ -38,7 +37,6 @@ public class Game {
             turn++;
             Side activeSide = turn % 2 == 1 ? firstSide : secondSide;
             activeSide.giveTurn();
-            if (firstSide.hasLost() || secondSide.hasLost()) break;
-        } while (true);
+        } while (firstSide.isAlive() && secondSide.isAlive());
     }
 }

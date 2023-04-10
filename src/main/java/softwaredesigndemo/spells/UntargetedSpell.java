@@ -7,9 +7,8 @@ import java.util.function.Predicate;
 
 public class UntargetedSpell extends Spell {
     final private Predicate<Sides> isCastingPossible;
-    
-    final private Consumer<Sides> spellEffect;
 
+    final private Consumer<Sides> spellEffect;
 
     public UntargetedSpell(Predicate<Sides> isCastingPossible, Consumer<Sides> spellEffect) {
         this.isCastingPossible = isCastingPossible;

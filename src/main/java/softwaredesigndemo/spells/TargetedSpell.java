@@ -42,14 +42,9 @@ public class TargetedSpell extends Spell {
         var ownSide = sides.own();
         var opponentsSide = sides.opponent();
 
-        if (classification.targetType() == TargetType.MINION) {
-            boolean canBeCast = switch (classification.sideType()) {
-                case ALLY -> hasMinions(ownSide);
-                case ENEMY -> hasMinions(opponentsSide);
-                case ALL -> hasMinions(ownSide, opponentsSide);
-            };
-            if (!canBeCast) return Optional.empty();
-        }
+        if (classification.targetType() == TargetType.MINION && !canBeCastAtAll(classification, ownSide, opponentsSide))
+            return Optional.empty();
+
         // during the game, both heroes are alive, so spell-casting in the other cases is always possible
         Scanner in = new Scanner(System.in);
         do {
@@ -61,6 +56,14 @@ public class TargetedSpell extends Spell {
             if (targetCharacter.isPresent() && classification.isValid().test(targetCharacter.get(), sides))
                 return targetCharacter;
         } while (true);
+    }
+
+    private static boolean canBeCastAtAll(TargetClassification classification, Side ownSide, Side opponentsSide) {
+        return switch (classification.sideType()) {
+            case ALLY -> hasMinions(ownSide);
+            case ENEMY -> hasMinions(opponentsSide);
+            case ALL -> hasMinions(ownSide, opponentsSide);
+        };
     }
 
     private static Optional<HearthstoneCharacter> getValidTarget(char targetSymbol, TargetClassification classification, Side ownSide, Side opponentsSide) {

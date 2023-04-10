@@ -13,7 +13,7 @@ public class Territory {
     public static final List<Character> indexToSymbol = List.of('!', '@', '#', '$', '%', '^', '&');
     private final ArrayList<Minion> minions = new ArrayList<>();
 
-    private static int getMinionIndex(char minionSymbol) {
+    private static int getFriendlyMinionIndex(char minionSymbol) {
         char normalizedSymbol = Character.toUpperCase(minionSymbol);
         return normalizedSymbol - 'A';
     }
@@ -75,20 +75,17 @@ public class Territory {
     }
 
     public boolean isValidAttacker(char minionSymbol) {
-        int minionIndex = getMinionIndex(minionSymbol);
+        int minionIndex = getFriendlyMinionIndex(minionSymbol);
         if (minionIndex >= minions.size()) return false;
         return minions.get(minionIndex).canAttack();
     }
 
     public void communicateInvalidAttacker(char minionSymbol) {
-        int minionIndex = getMinionIndex(minionSymbol);
+        int minionIndex = getFriendlyMinionIndex(minionSymbol);
         char standardizedMinionSymbol = (char) (minionIndex + 'A');
-        if (minionIndex >= minions.size()) {
+        if (minionIndex >= minions.size())
             System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
-            return;
-        }
-        if (!minions.get(minionIndex).canAttack())
-            Color.RED.println("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
+        else Color.RED.println("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
     }
 
     public boolean isValidAttackee(char minionSymbol) {
@@ -101,8 +98,7 @@ public class Territory {
         int minionIndex = indexToSymbol.indexOf(attackeeSymbol);
         if ((attackeeSymbol != Side.ENEMY_HERO_SYMBOL && minionIndex < 0) || minionIndex >= minions.size())
             System.out.printf("There is no minion '%c'!\n", attackeeSymbol);
-        if (attackeeSymbol == Side.ENEMY_HERO_SYMBOL || !isAttackable(minions.get(minionIndex)))
-            Color.RED.println("A minion with taunt is in the way!\n");
+        else Color.RED.println("A minion with taunt is in the way!\n");
     }
 
     public Minion getMinion(char minionSymbol) {
