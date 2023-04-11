@@ -6,7 +6,7 @@ import java.util.function.UnaryOperator;
 public abstract class HearthstoneCharacter {
     final protected Stats stats;
 
-    protected boolean attackedThisTurn = false;
+    protected int attacksRemainingThisTurn;
 
     protected HearthstoneCharacter(int maxHealth, int attack, List<Enhancement> enhancements) {
         this.stats = new Stats(maxHealth, attack, enhancements);
@@ -37,12 +37,12 @@ public abstract class HearthstoneCharacter {
     }
 
     public boolean canAttack() {
-        return stats.getAttack() > 0 && !attackedThisTurn;
+        return stats.getAttack() > 0 && !isFrozen();
     }
 
     public void attack(HearthstoneCharacter attackee) {
         attackee.takeDamage(stats.getAttack());
-        attackedThisTurn = true;
+        attacksRemainingThisTurn--;
         if (attackee instanceof Minion otherMinion) {
             // heroes CANNOT counterattack
             takeDamage(otherMinion.stats.getAttack());
@@ -50,7 +50,26 @@ public abstract class HearthstoneCharacter {
     }
 
     public void startTurn() {
-        attackedThisTurn = false;
+        attacksRemainingThisTurn = 1; // TODO: may need to update for WindFury minions
         stats.countDownTemporaryEnhancements();
+    }
+
+    public void freeze() {
+        if (!stats.isFrozen()) {
+            attacksRemainingThisTurn--;
+            if (attacksRemainingThisTurn <= 0) stats.enhance(Enhancement.FROZEN);
+        }
+    }
+
+    public void tryUnfreeze() {
+        if (attacksRemainingThisTurn >= 0) stats.tryUnfreeze();
+    }
+
+    public boolean isFrozen() {
+        return stats.isFrozen();
+    }
+
+    public boolean hasTaunt() {
+        return false; // for hero. Can differ for minions
     }
 }

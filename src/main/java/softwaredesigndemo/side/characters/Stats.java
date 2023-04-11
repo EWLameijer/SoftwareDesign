@@ -77,6 +77,11 @@ public class Stats {
         enhancements.add(new Enhancement(transform));
     }
 
+    public void enhance(Enhancement enhancement) {
+        enhancements.add(enhancement);
+    }
+
+
     public void enhance(UnaryOperator<Stats> transform, int turns) {
         enhancements.add(new TemporaryEnhancement(transform, turns));
     }
@@ -99,5 +104,16 @@ public class Stats {
             var enhancement = enhancements.get(i);
             if (!enhancement.isActive()) enhancements.remove(i);
         }
+    }
+
+    public void tryUnfreeze() {
+        for (int i = enhancements.size() - 1; i >= 0; i--) {
+            var enhancement = enhancements.get(i);
+            if (enhancement == Enhancement.FROZEN) enhancements.remove(i);
+        }
+    }
+
+    public boolean isFrozen() {
+        return enhancements.contains(Enhancement.FROZEN);
     }
 }

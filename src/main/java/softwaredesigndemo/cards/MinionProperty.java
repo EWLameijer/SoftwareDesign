@@ -1,3 +1,3 @@
 package softwaredesigndemo.cards;
 
-public enum MinionProperty {CHARGE, TAUNT}
+public enum MinionProperty {CHARGE, FROZEN, TAUNT}

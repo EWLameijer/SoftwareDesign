@@ -1,5 +1,6 @@
 package softwaredesigndemo.side;
 
+import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.side.characters.Minion;
 import softwaredesigndemo.utils.Color;
 
@@ -42,32 +43,29 @@ public class Territory {
 
     private String colorAsFriendly(Minion minion) {
         int minionIndex = minions.indexOf(minion);
-        return colorFriendly(minion).apply(minionDisplayString(minion, (char) (minionIndex + 'A')));
-    }
-
-    public UnaryOperator<String> colorFriendly(Minion minion) {
-        return minion.canAttack() ? Color.YELLOW::color : Color.BLUE::color;
+        return Color.attackStatusColor(minion).apply(minionDisplayString(minion, (char) (minionIndex + 'A')));
     }
 
     public void showAsEnemy() {
         System.out.printf("[%s]%n", String.join(" | ", minions.stream().map(this::colorAsEnemy).toList()));
     }
 
-    public UnaryOperator<String> colorEnemy(boolean isAttackable) {
-        return isAttackable ? Color.RED::color : Color.PURPLE::color;
+    public UnaryOperator<String> colorEnemy(HearthstoneCharacter character) {
+        if (character.isFrozen()) return Color.CYAN::color;
+        return isAttackable(character) ? Color.RED::color : Color.PURPLE::color;
     }
 
     private String colorAsEnemy(Minion minion) {
         int minionIndex = minions.indexOf(minion);
-        return colorEnemy(isAttackable(minion)).apply(minionDisplayString(minion, indexToSymbol.get(minionIndex)));
+        return colorEnemy(minion).apply(minionDisplayString(minion, indexToSymbol.get(minionIndex)));
     }
 
     private String minionDisplayString(Minion minion, char minionSymbol) {
         return "%s %d/%d (%c)".formatted(minion.getName(), minion.getAttack(), minion.getHealth(), minionSymbol);
     }
 
-    private boolean isAttackable(Minion minion) {
-        return minions.stream().noneMatch(Minion::hasTaunt) || minion.hasTaunt();
+    private boolean isAttackable(HearthstoneCharacter character) {
+        return minions.stream().noneMatch(Minion::hasTaunt) || character.hasTaunt();
     }
 
     public boolean noTauntMinionsPresent() {

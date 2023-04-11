@@ -11,6 +11,9 @@ public class Enhancement {
 
     public static final Enhancement CHARGE = new Enhancement(s -> s.addProperty(MinionProperty.CHARGE));
 
+    public static final Enhancement FROZEN = new Enhancement(s -> s.addProperty(MinionProperty.FROZEN));
+
+
     Enhancement(UnaryOperator<Stats> transform) {
         this.transform = transform;
     }

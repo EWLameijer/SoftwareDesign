@@ -7,6 +7,8 @@ import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.side.characters.Hero;
 import softwaredesigndemo.utils.Color;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.UnaryOperator;
@@ -65,6 +67,19 @@ public class Side {
             if (choice.equalsIgnoreCase("Q")) return;
             execute(choice);
         } while (isAlive() && opponentsSide.isAlive());
+        endTurn();
+    }
+
+    private void endTurn() {
+        for (var character : getCharacters()) {
+            character.tryUnfreeze();
+        }
+    }
+
+    List<HearthstoneCharacter> getCharacters() {
+        List<HearthstoneCharacter> allCharacters = new ArrayList<>(territory.getMinions());
+        allCharacters.add(hero);
+        return allCharacters;
     }
 
     private void startTurn() {
@@ -139,13 +154,13 @@ public class Side {
         opponentsSide.showAsEnemy();
         territory.show();
         manaBar.show();
-        UnaryOperator<String> colorFunction = hero.canAttack() ? Color.YELLOW::color : Color.BLUE::color;
+        UnaryOperator<String> colorFunction = Color.attackStatusColor(hero);
         hero.show(playerName, colorFunction, FRIENDLY_HERO_SYMBOL);
         hand.showDuringGame(this.getManaBar().getAvailableMana());
     }
 
     private void showAsEnemy() {
-        var heroColorFunction = territory.colorEnemy(territory.noTauntMinionsPresent());
+        var heroColorFunction = territory.colorEnemy(hero);
         hero.show(playerName, heroColorFunction, ENEMY_HERO_SYMBOL);
         territory.showAsEnemy();
     }

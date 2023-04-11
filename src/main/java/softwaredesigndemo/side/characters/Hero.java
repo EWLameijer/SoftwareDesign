@@ -18,6 +18,7 @@ public class Hero extends HearthstoneCharacter {
     private Hero(HeroType type) {
         super(MAXIMUM_HP, 0, List.of());
         this.type = type;
+        attacksRemainingThisTurn = 1;
     }
 
     public static Hero from(HeroType type) {
@@ -52,5 +53,10 @@ public class Hero extends HearthstoneCharacter {
         String attackText = stats.getAttack() > 0 ? "<" + stats.getAttack() + " ATTACK>" : "";
         System.out.println(colorFunction.apply("%s (%s): %d HP%s %s(%c)".
                 formatted(playerName, getType().name(), getHealth(), armorText, attackText, symbol)));
+    }
+
+    @Override
+    public boolean canAttack() {
+        return super.canAttack() && attacksRemainingThisTurn > 0;
     }
 }

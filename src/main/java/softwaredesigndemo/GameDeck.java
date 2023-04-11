@@ -92,9 +92,17 @@ public record GameDeck(HeroType heroType, List<Card> cards) {
     static final Card ARCANE_MISSILES = new SpellCard("Arcane Missiles", 1, "deal 3 damage randomly split between all enemy characters", ARCANE_MISSILES_SPELL);
     static final Card ARCHMAGE = new MinionCard("Archmage", 6, "Spell Damage + 1", 4, 7, List.of());
     static final Card DARKSCALE_HEALER = new MinionCard("Darkscale Healer", 5, "Battlecry: restore 2 health to all friendly characters", 4, 5, List.of());
-    static final Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage");
-    static final Card FLAMESTRIKE = new SpellCard("Flamestrike", 7, "deal 4 damage to all enemy minions");
-    static final Card FROST_NOVA = new SpellCard("Frost Nova", 3, "freeze all enemy minions");
+
+    static final TargetClassification ANY = new TargetClassification(TargetType.CHARACTER, SideType.ALL, NO_FURTHER_REQUIREMENTS);
+    static final TargetedSpell FIREBALL_SPELL = new TargetedSpell(ANY, (t, s) -> t.takeDamage(6));
+    static final Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage", FIREBALL_SPELL);
+
+    static final UntargetedSpell FLAMESTRIKE_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED, s -> s.opponent().getTerritory().getMinions().forEach(m -> m.takeDamage(4)));
+    static final Card FLAMESTRIKE = new SpellCard("Flamestrike", 7, "deal 4 damage to all enemy minions", FLAMESTRIKE_SPELL);
+
+    static final UntargetedSpell FROST_NOVA_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED, s -> s.opponent().getTerritory().getMinions().forEach(HearthstoneCharacter::freeze));
+
+    static final Card FROST_NOVA = new SpellCard("Frost Nova", 3, "freeze all enemy minions", FROST_NOVA_SPELL);
     static final Card FROSTBOLT = new SpellCard("Frostbolt", 2, "deal 3 damage to a character and Freeze it");
     static final Card KOBOLD_GEOMANCER = new MinionCard("Kobold Geomancer", 2, "Spell Damage  +1", 2, 2, List.of());
     static final Card MAGMA_RAGER = new MinionCard("Magma Rager", 3, "", 5, 1, List.of());

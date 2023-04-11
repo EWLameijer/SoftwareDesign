@@ -38,8 +38,10 @@ public class Hand {
     }
 
     public void play(int index, Sides sides) {
-        if (index < 0 || index >= cards.size())
-            throw new IllegalArgumentException("Hand.play() error: " + index + " is not a valid index!");
+        if (index < 0 || index >= cards.size()) {
+            Color.RED.println("Card number " + index + " does not exist!");
+            return;
+        }
         var chosenCard = cards.get(index);
         if (chosenCard.canPlay(sides)) {
             sides.own().getManaBar().consume(chosenCard.getCost());
