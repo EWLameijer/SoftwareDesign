@@ -2,8 +2,17 @@ package softwaredesigndemo.side;
 
 public class ManaBar {
     private int capacity = 0;
-    
+
     private int availableMana = 0;
+
+    public ManaBar() {
+    }
+
+    // for unit testing
+    private ManaBar(int capacity) {
+        this.capacity = capacity;
+        this.availableMana = capacity;
+    }
 
     void startTurn() {
         final int maxCapacity = 10;
@@ -12,7 +21,8 @@ public class ManaBar {
     }
 
     void consume(int amount) {
-        if (amount < 0 || amount > availableMana) throw new IllegalArgumentException("ManaBar.consume() error: " + amount + "  is out of range!");
+        if (amount < 0 || amount > availableMana)
+            throw new IllegalArgumentException("ManaBar.consume() error: " + amount + "  is out of range!");
         availableMana -= amount;
     }
 
@@ -22,5 +32,10 @@ public class ManaBar {
 
     public int getAvailableMana() {
         return availableMana;
+    }
+
+    // for unit testing
+    static ManaBar createTestManaBar(int capacity) {
+        return new ManaBar(capacity);
     }
 }

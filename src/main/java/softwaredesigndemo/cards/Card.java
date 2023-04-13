@@ -36,8 +36,8 @@ public abstract class Card {
         return name + ": " + cost + " mana" + separatedDescription;
     }
 
-    public void communicateInvalidPlay(Sides sides) {
-        if (cost > sides.own().getManaBar().getAvailableMana())
-            Color.RED.println("You don't have enough mana to play this card!");
+    public String communicateInvalidPlay(Sides sides) {
+        return cost > sides.own().getManaBar().getAvailableMana() ?
+                Color.RED.color("You don't have enough mana to play this card!") : null;
     }
 }

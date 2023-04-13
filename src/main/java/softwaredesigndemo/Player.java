@@ -1,5 +1,7 @@
 package softwaredesigndemo;
 
+import softwaredesigndemo.side.GameDeck;
+
 import java.util.Scanner;
 
 public class Player {

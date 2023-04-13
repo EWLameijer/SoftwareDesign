@@ -1,7 +1,7 @@
-package softwaredesigndemo;
+package softwaredesigndemo.side;
 
+import softwaredesigndemo.Sides;
 import softwaredesigndemo.cards.*;
-import softwaredesigndemo.side.HeroType;
 import softwaredesigndemo.side.characters.Enhancement;
 import softwaredesigndemo.side.characters.HearthstoneCharacter;
 import softwaredesigndemo.spells.*;

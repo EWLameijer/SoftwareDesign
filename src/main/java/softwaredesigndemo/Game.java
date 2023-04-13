@@ -22,6 +22,17 @@ public class Game {
             firstSide = new Side(playerB);
             secondSide = new Side(playerA);
         }
+        coupleSides();
+    }
+
+    // for unit testing purposes
+    private Game(Side firstSide, Side secondSide) {
+        this.firstSide = firstSide;
+        this.secondSide = secondSide;
+        coupleSides();
+    }
+
+    private void coupleSides() {
         firstSide.setOpponentsSide(secondSide);
         secondSide.setOpponentsSide(firstSide);
     }
@@ -38,5 +49,10 @@ public class Game {
             Side activeSide = turn % 2 == 1 ? firstSide : secondSide;
             activeSide.giveTurn();
         } while (firstSide.isAlive() && secondSide.isAlive());
+    }
+
+    // for unit testing purposes
+    static Game createTestGame(Side friendlySide, Side enemySide) {
+        return new Game(friendlySide, enemySide);
     }
 }

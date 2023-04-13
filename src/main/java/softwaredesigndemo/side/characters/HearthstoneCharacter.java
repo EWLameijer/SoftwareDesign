@@ -8,8 +8,15 @@ public abstract class HearthstoneCharacter {
 
     protected int attacksRemainingThisTurn;
 
-    protected HearthstoneCharacter(int maxHealth, int attack, List<Enhancement> enhancements) {
+    private final String name;
+
+    protected HearthstoneCharacter(int maxHealth, int attack, List<Enhancement> enhancements, String name) {
         this.stats = new Stats(maxHealth, attack, enhancements);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getHealth() {
@@ -40,13 +47,14 @@ public abstract class HearthstoneCharacter {
         return stats.getAttack() > 0 && !isFrozen();
     }
 
-    public void attack(HearthstoneCharacter attackee) {
+    public String attack(HearthstoneCharacter attackee) {
         attackee.takeDamage(stats.getAttack());
         attacksRemainingThisTurn--;
         if (attackee instanceof Minion otherMinion) {
             // heroes CANNOT counterattack
             takeDamage(otherMinion.stats.getAttack());
         }
+        return name + " attacks " + attackee.name;
     }
 
     public void startTurn() {

@@ -2,7 +2,9 @@ package softwaredesigndemo.side;
 
 import softwaredesigndemo.cards.Card;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Deck {
     private final ArrayList<Card> cards;
@@ -12,6 +14,11 @@ public class Deck {
         if (cards.size() != initialDeckSize)
             throw new IllegalArgumentException("Deck(): a deck must have %d cards, this deck has %d.".formatted(initialDeckSize, cards.size()));
         this.cards = new ArrayList<>(cards);
+    }
+
+    // for unit testing
+    private Deck(Card... cards) {
+        this.cards = new ArrayList<>(List.of(cards));
     }
 
     public void shuffle() {
@@ -46,5 +53,10 @@ public class Deck {
 
     public boolean canDraw() {
         return size() > 0;
+    }
+
+    // for unit testing
+    static Deck createTestDeck(Card... cards) {
+        return new Deck(cards);
     }
 }

@@ -18,10 +18,10 @@ public class Side {
     public static final char FRIENDLY_HERO_SYMBOL = 'H';
 
     private final Hero hero;
-    private final Territory territory = new Territory();
+    private final Territory territory;
     private final Deck deck;
-    private final ManaBar manaBar = new ManaBar();
-    private final Hand hand = new Hand();
+    private final ManaBar manaBar;
+    private final Hand hand;
     private final String playerName;
     private Side opponentsSide;
 
@@ -30,7 +30,22 @@ public class Side {
         this.hero = Hero.from(playerDeck.heroType());
         this.deck = new Deck(playerDeck.cards());
         this.playerName = player.getName();
+        // below code to make it easier to make Side easier to unit-test while still having the integrity of final fields.
+        hand = new Hand();
+        manaBar = new ManaBar();
+        territory = new Territory();
     }
+
+    // for unit tests
+    private Side(Hero hero, Territory territory, Deck deck, ManaBar manaBar, Hand hand, String playerName) {
+        this.hero = hero;
+        this.territory = territory;
+        this.deck = deck;
+        this.manaBar = manaBar;
+        this.hand = hand;
+        this.playerName = playerName;
+    }
+
 
     public void setOpponentsSide(Side opponentsSide) {
         this.opponentsSide = opponentsSide;
@@ -65,7 +80,7 @@ public class Side {
             String choice = in.nextLine();
             if (choice.isBlank()) continue;
             if (choice.equalsIgnoreCase("Q")) return;
-            execute(choice);
+            System.out.println(execute(choice));
         } while (isAlive() && opponentsSide.isAlive());
         endTurn();
     }
@@ -98,11 +113,12 @@ public class Side {
         }
     }
 
-    private void execute(String choice) {
+    private String execute(String choice) {
         char first = choice.charAt(0);
+        String response;
         if (Character.isDigit(first)) {
             int chosenCardIndex = Integer.parseInt(choice.substring(0, 1));
-            hand.play(chosenCardIndex, new Sides(this, opponentsSide));
+            response = hand.play(chosenCardIndex, new Sides(this, opponentsSide));
         } else {
             if (Character.isLetter(first)) {
                 char attackerSymbol = Character.toUpperCase(first);
@@ -111,18 +127,18 @@ public class Side {
                     if (opponentsSide.isValidAttackee(second)) {
                         var attacker = getAttacker(attackerSymbol);
                         var attackee = opponentsSide.getAttackee(second);
-                        attacker.attack(attackee);
-                    } else opponentsSide.territory.communicateInvalidAttackee(second);
-                } else communicateInvalidAttacker(attackerSymbol);
-            }
+                        response = attacker.attack(attackee);
+                    } else response = opponentsSide.territory.communicateInvalidAttackee(second);
+                } else response = communicateInvalidAttacker(attackerSymbol);
+            } else response = "'%s' is an invalid command".formatted(choice);
         }
         disposeOfDeceasedIfAny();
+        return response;
     }
 
-    private void communicateInvalidAttacker(char attackerSymbol) {
-        if (attackerSymbol == FRIENDLY_HERO_SYMBOL && !getHero().canAttack())
-            System.out.println("Your hero cannot attack (anymore).");
-        else territory.communicateInvalidAttacker(attackerSymbol);
+    private String communicateInvalidAttacker(char attackerSymbol) {
+        return attackerSymbol == FRIENDLY_HERO_SYMBOL && !getHero().canAttack() ?
+                "Your hero cannot attack (anymore)." : territory.communicateInvalidAttacker(attackerSymbol);
     }
 
     private boolean isValidAttacker(char attackerSymbol) {
@@ -182,5 +198,14 @@ public class Side {
         Random random = new Random();
         int chosenIndex = random.nextInt(minionCount + 1); // the opposing hero is also a valid target
         return chosenIndex == minionCount ? hero : territory.getMinions().get(chosenIndex);
+    }
+
+    // for unit testing
+    static Side createTestSide(Hero hero, Territory territory, Deck deck, ManaBar manaBar, Hand hand, String playerName) {
+        return new Side(hero, territory, deck, manaBar, hand, playerName);
+    }
+
+    public String testExecute(String command) {
+        return execute(command);
     }
 }

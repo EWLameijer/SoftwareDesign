@@ -39,8 +39,8 @@ public class MinionCard extends Card {
     }
 
     @Override
-    public void communicateInvalidPlay(Sides sides) {
-        if (!super.canPlay(sides)) super.communicateInvalidPlay(sides);
-        else Color.RED.println("You can't play any more minions! The board is full!");
+    public String communicateInvalidPlay(Sides sides) {
+        if (!super.canPlay(sides)) return super.communicateInvalidPlay(sides);
+        return Color.RED.color("You can't play any more minions! The board is full!");
     }
 }

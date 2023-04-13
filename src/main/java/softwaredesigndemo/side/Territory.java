@@ -78,12 +78,12 @@ public class Territory {
         return minions.get(minionIndex).canAttack();
     }
 
-    public void communicateInvalidAttacker(char minionSymbol) {
+    public String communicateInvalidAttacker(char minionSymbol) {
         int minionIndex = getFriendlyMinionIndex(minionSymbol);
         char standardizedMinionSymbol = (char) (minionIndex + 'A');
-        if (minionIndex >= minions.size())
-            System.out.printf("There is no minion '%c'!\n", standardizedMinionSymbol);
-        else Color.RED.println("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
+        return minionIndex >= minions.size() ?
+                "There is no minion '%c'!\n".formatted(standardizedMinionSymbol) :
+                Color.RED.color("Minion %c cannot currently attack!\n".formatted(standardizedMinionSymbol));
     }
 
     public boolean isValidAttackee(char minionSymbol) {
@@ -92,11 +92,11 @@ public class Territory {
         return isAttackable(minions.get(minionIndex));
     }
 
-    public void communicateInvalidAttackee(char attackeeSymbol) {
+    public String communicateInvalidAttackee(char attackeeSymbol) {
         int minionIndex = indexToSymbol.indexOf(attackeeSymbol);
-        if ((attackeeSymbol != Side.ENEMY_HERO_SYMBOL && minionIndex < 0) || minionIndex >= minions.size())
-            System.out.printf("There is no minion '%c'!\n", attackeeSymbol);
-        else Color.RED.println("A minion with taunt is in the way!\n");
+        String message = (attackeeSymbol != Side.ENEMY_HERO_SYMBOL && minionIndex < 0) || minionIndex >= minions.size() ?
+                "There is no minion '%c'!\n".formatted(attackeeSymbol) : "A minion with taunt is in the way!\n";
+        return Color.RED.color(message);
     }
 
     public Minion getMinion(char minionSymbol) {
