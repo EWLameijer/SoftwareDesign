@@ -116,4 +116,123 @@ class Kata {
 }
 ```
 
-Nu lijkt het alsof je niets bent opgeschoten, maar je hebt in elk geval wat geschreven, dus mogelijk dat je creatieve sappen wat op gang zijn gekomen. Je kan het nog eens proberen, bijvoorbeeld googelen op "first letter of string java" en last letter of string java 
+Nu lijkt het alsof je niets bent opgeschoten, maar je hebt in elk geval wat geschreven, dus mogelijk dat je creatieve sappen wat op gang zijn gekomen. Je kan het nog eens proberen, bijvoorbeeld googelen op "first letter of string java" en last letter of string java. Je krijgt dan sites als "https://www.w3schools.com/java/ref_string_charat.asp#:~:text=The%20charAt()%20method%20returns,is%201%2C%20and%20so%20on." waaruit je kan opmaken dat je string.charAt(0) kunt gebruiken voor het eerste karakter.
+
+https://stackoverflow.com/questions/5163785/how-do-i-get-the-last-character-of-a-string heeft het (NA SCROLLEN) over string.charAt(string.length() -1). Dus probeer ik het opnieuw:
+
+```
+class Kata {
+	static boolean feast(String animalName, String dishName) {
+		char firstCharacterAnimal = animalName.charAt(0);
+		char firstCharacterDish = dishName.charAt(0);
+		char lastCharacterAnimal = animalName.charAt(animalName.length() - 1);
+		char lastCharacterDish = dishName.charAt(dishName.length() - 1);
+		if(firstCharacterAnimal == firstCharacterDish && lastCharacterAnimal == lastCharacterDish) return true;
+		else return false;
+	}
+}
+```
+
+Als ik dat probeer, werkt het!
+
+Het is natuurlijk nu goed genoeg, maar voor de lol plak ik het in IntelliJ, die suggereert dat het laatste if-statement simpeler kan:
+
+``` 
+static boolean feast(String animalName, String dishName) {
+    char firstCharacterAnimal = animalName.charAt(0);
+    char firstCharacterDish = dishName.charAt(0);
+    char lastCharacterAnimal = animalName.charAt(animalName.length() - 1);
+    char lastCharacterDish = dishName.charAt(dishName.length() - 1);
+    return firstCharacterAnimal == firstCharacterDish && lastCharacterAnimal == lastCharacterDish;
+}
+```
+
+Ik denk bij het herlezen ook dat Letter korter is dan Character. Makkelijk te doen in IDEA met Ctrl+R
+
+``` 
+static boolean feast(String animalName, String dishName) {
+    char firstLetterAnimal = animalName.charAt(0);
+    char firstLetterDish = dishName.charAt(0);
+    char lastLetterAnimal = animalName.charAt(animalName.length() - 1);
+    char lastLetterDish = dishName.charAt(dishName.length() - 1);
+    return firstLetterAnimal == firstLetterDish && lastLetterAnimal == lastLetterDish;
+}
+```
+
+Nu vind ik die statements die de laatste letter bepalen nogal lang. En het wordt ook nog herhaald! Ik herinner met Ctrl+Alt+M voor het extraheren van een methode.
+
+``` 
+static boolean feast(String animalName, String dishName) {
+    char firstLetterAnimal = animalName.charAt(0);
+    char firstLetterDish = dishName.charAt(0);
+    char lastLetterAnimal = lastLetterOf(animalName);
+    char lastLetterDish = lastLetterOf(dishName);
+    return firstLetterAnimal == firstLetterDish && lastLetterAnimal == lastLetterDish;
+}
+
+private static char lastLetterOf(String animalName) {
+    return animalName.charAt(animalName.length() - 1);
+}
+``` 
+
+Dit vind ik er mooier uitzien. Voor de symmetrie doe ik hetzelfde met de eerste letter... 
+
+``` 
+static boolean feast(String animalName, String dishName) {
+    char firstLetterAnimal = firstLetterOf(animalName);
+    char firstLetterDish = firstLetterOf(dishName);
+    char lastLetterAnimal = lastLetterOf(animalName);
+    char lastLetterDish = lastLetterOf(dishName);
+    return firstLetterAnimal == firstLetterDish && lastLetterAnimal == lastLetterDish;
+}
+
+private static char firstLetterOf(String dishName) {
+    return dishName.charAt(0);
+}
+
+private static char lastLetterOf(String animalName) {
+    return animalName.charAt(animalName.length() - 1);
+}
+```
+
+Omdat ik elke variabele nu slechts 1x gebruik en lastLetterDish niet veel eenvoudiger is dan lastLetterOf(dishName) (ik kan denk ik sowieso dishName hernoemen naar dish, ik heb toch geen Dish-klassen)
+
+Dus eerst dishName en animalName hernoemen (en gelijk die parameters als 'String animalName' gewoon String text maken in de firstLetterOf)
+
+```
+static boolean feast(String animal, String dish) {
+    char firstLetterAnimal = firstLetterOf(animal);
+    char firstLetterDish = firstLetterOf(dish);
+    char lastLetterAnimal = lastLetterOf(animal);
+    char lastLetterDish = lastLetterOf(dish);
+    return firstLetterAnimal == firstLetterDish && lastLetterAnimal == lastLetterDish;
+}
+
+private static char firstLetterOf(String text) {
+    return text.charAt(0);
+}
+
+private static char lastLetterOf(String text) {
+    return text.charAt(text.length() - 1);
+}
+
+```
+
+En dan firstLetterAnimal 'inlinen' - vervangen door zijn definitie (Ctrl -Alt N) inlinet de variabele:
+
+``` 
+static boolean feast(String animal, String dish) {
+    return firstLetterOf(animal) == firstLetterOf(dish) && lastLetterOf(animal) == lastLetterOf(dish);
+}
+
+private static char firstLetterOf(String text) {
+    return text.charAt(0);
+}
+
+private static char lastLetterOf(String text) {
+    return text.charAt(text.length() - 1);
+}
+``` 
+
+Nogmaals, je HOEFT dingen niet zover op te ruimen. Zeker in de eerste 6 maanden programmeren: als de code werkt, is het goed genoeg. Al zie ik het wel als een bonus als je de code na een dag of een week nog eens overleest om te kijken of je verbeteringen ziet, dat maakt je alleen maar een betere developer!
+
