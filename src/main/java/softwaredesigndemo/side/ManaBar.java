@@ -26,6 +26,12 @@ public class ManaBar {
         availableMana -= amount;
     }
 
+    void increase(int amount) {
+        if (amount < 0)
+            throw new IllegalArgumentException("ManaBar.increase() error: " + amount + "  is out of range!");
+        availableMana += amount;
+    }
+
     void show() {
         System.out.printf("MANA: %d out of %d available\n", availableMana, capacity);
     }

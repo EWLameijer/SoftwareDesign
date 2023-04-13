@@ -7,12 +7,11 @@ public class Minion extends HearthstoneCharacter {
     private boolean isFirstTurn = true;
 
     public Minion(String name, int attack, int health, List<Enhancement> enhancements) {
-        super(health, attack, enhancements, name);
+        super(attack, health, enhancements, name);
         attacksRemainingThisTurn = 0; // won't be really appropriate for a charge minion, but since charge can also be
         // obtained by a spell or lost by silence, in the first turn I will count 1 less for now
     }
-
-
+    
     @Override
     public boolean canAttack() {
         if (!super.canAttack()) return false;

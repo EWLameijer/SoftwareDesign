@@ -1,11 +1,6 @@
 TODOs
 
 1) Mage spells
-    FIREBALL
-    FLAMESTRIKE
-    FROST_NOVA
-    FROSTBOLT
-    MIRROR_IMAGE
     POLYMORPH
 1b) COIN (spell)
 2) weapons

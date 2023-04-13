@@ -37,7 +37,8 @@ public abstract class Card {
     }
 
     public String communicateInvalidPlay(Sides sides) {
-        return cost > sides.own().getManaBar().getAvailableMana() ?
-                Color.RED.color("You don't have enough mana to play this card!") : null;
+        String message = cost > sides.own().getManaBar().getAvailableMana() ?
+                "You don't have enough mana to play this card!" : "This card's preconditions have not been met!";
+        return Color.RED.color(message);
     }
 }

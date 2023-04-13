@@ -16,7 +16,7 @@ public class Hero extends HearthstoneCharacter {
     private int armor = 0;
 
     private Hero(HeroType type) {
-        super(MAXIMUM_HP, 0, List.of(), "Your hero");
+        super(0, MAXIMUM_HP, List.of(), "Your hero");
         this.type = type;
         attacksRemainingThisTurn = 1;
     }

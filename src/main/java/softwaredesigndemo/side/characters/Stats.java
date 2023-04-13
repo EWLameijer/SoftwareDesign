@@ -20,14 +20,14 @@ public class Stats {
 
     private final Set<MinionProperty> properties = new HashSet<>();
 
-    public Stats(int maxHealth, int attack, List<Enhancement> enhancements) {
+    public Stats(int attack, int maxHealth, List<Enhancement> enhancements) {
         this.maxHealth = maxHealth;
         health = maxHealth;
         this.attack = attack;
         this.enhancements = new ArrayList<>(enhancements);
     }
 
-    private Stats(int maxHealth, int health, int attack, List<Enhancement> enhancements, Set<MinionProperty> properties) {
+    private Stats(int attack, int maxHealth, int health, List<Enhancement> enhancements, Set<MinionProperty> properties) {
         this.maxHealth = maxHealth;
         this.health = health;
         this.attack = attack;
@@ -52,7 +52,7 @@ public class Stats {
     }
 
     public Stats addProperty(MinionProperty property) {
-        var statsCopy = new Stats(maxHealth, health, attack, enhancements, properties);
+        var statsCopy = new Stats(attack, maxHealth, health, enhancements, properties);
         statsCopy.properties.add(property);
         return statsCopy;
     }

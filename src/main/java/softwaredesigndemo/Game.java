@@ -1,7 +1,6 @@
 package softwaredesigndemo;
 
-import softwaredesigndemo.cards.Card;
-import softwaredesigndemo.cards.SpellCard;
+import softwaredesigndemo.side.GameDeck;
 import softwaredesigndemo.side.Side;
 
 import java.util.Random;
@@ -41,8 +40,7 @@ public class Game {
         System.out.println("The game starts! " + firstSide.getPlayerName() + " begins!");
         firstSide.mulligan(3);
         secondSide.mulligan(4);
-        Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only");
-        secondSide.giveCard(COIN);
+        secondSide.giveCard(GameDeck.COIN);
         int turn = 0;
         do {
             turn++;

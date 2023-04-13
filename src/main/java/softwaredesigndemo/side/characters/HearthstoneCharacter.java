@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public abstract class HearthstoneCharacter {
-    final protected Stats stats;
+    protected Stats stats; // cannot be final due to polymorph
 
     protected int attacksRemainingThisTurn;
 
-    private final String name;
+    private String name; // cannot be final due to polymorph
 
-    protected HearthstoneCharacter(int maxHealth, int attack, List<Enhancement> enhancements, String name) {
-        this.stats = new Stats(maxHealth, attack, enhancements);
+    protected HearthstoneCharacter(int attack, int maxHealth, List<Enhancement> enhancements, String name) {
+        this.stats = new Stats(attack, maxHealth, enhancements);
         this.name = name;
     }
 
@@ -79,5 +79,10 @@ public abstract class HearthstoneCharacter {
 
     public boolean hasTaunt() {
         return false; // for hero. Can differ for minions
+    }
+
+    public void polymorph(String newName, int attack, int health) {
+        name = newName;
+        stats = new Stats(attack, health, List.of());
     }
 }

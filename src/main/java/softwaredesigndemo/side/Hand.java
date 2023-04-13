@@ -60,14 +60,23 @@ public class Hand {
     public void mulligan(Deck deck) {
         showAsMulligan();
         System.out.println("\nPlease give the numbers of the cards you want to mulligan (swap) (like '1 3'): ");
-        Scanner in = new Scanner(System.in);
-        String[] numbers = in.nextLine().split(" ");
-
+        String line = getNumberString();
+        String[] numbers = line.split(" ");
         if (!numbers[0].isEmpty()) {
             mulliganCards(deck, numbers);
             System.out.println("Your new cards:");
             showAsMulligan();
         }
+    }
+
+    private static String getNumberString() {
+        Scanner in = new Scanner(System.in);
+        do {
+            String line = in.nextLine();
+            if (!line.chars().allMatch(c -> Character.isWhitespace(c) || Character.isDigit(c)))
+                Color.RED.println("Enter digits and spaces only!");
+            else return line;
+        } while (true);
     }
 
     private void mulliganCards(Deck deck, String[] numbers) {
