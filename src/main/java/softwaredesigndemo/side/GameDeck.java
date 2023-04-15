@@ -18,6 +18,12 @@ public record GameDeck(HeroType heroType, List<Card> cards) {
     static final TargetClassification ANY_MINION = new TargetClassification(TargetType.MINION, SideType.ALL, NO_FURTHER_REQUIREMENTS);
     static final TargetClassification ALLIED_MINION = new TargetClassification(TargetType.MINION, SideType.ALLY, NO_FURTHER_REQUIREMENTS);
 
+    static final TargetClassification ANY = new TargetClassification(TargetType.CHARACTER, SideType.ALL, NO_FURTHER_REQUIREMENTS);
+
+    static final TargetedSpell MAGE_HERO_POWER = new TargetedSpell(ANY, (t, s) -> t.takeDamage(1));
+
+    static final UntargetedSpell WARRIOR_HERO_POWER = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED, s -> s.own().getHero().increaseArmor(2));
+
 
     static final UntargetedSpell COIN_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED, s -> s.own().getManaBar().increase(1));
     public static final Card COIN = new SpellCard("The Coin", 0, "Gain 1 mana crystal this turn only", COIN_SPELL);
@@ -44,7 +50,7 @@ public record GameDeck(HeroType heroType, List<Card> cards) {
     static final Card HEROIC_STRIKE = new SpellCard("Heroic Strike", 2, "give hero +4 attack this turn", HEROIC_STRIKE_SPELL);
     static final Card KOK_KRON_ELITE = new MinionCard("Kok'kron Elite", 4, "", 4, 3, List.of(Enhancement.CHARGE));
     static final Card RAID_LEADER = new MinionCard("Raid Leader", 3, "all your other minions have +1 attack", 2, 2, List.of());
-    static final Card SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "", 3, 5, List.of(Enhancement.TAUNT));
+    static final MinionCard SEN_JIN_SHIELDMASTA = new MinionCard("Sen'jin Shieldmasta", 4, "", 3, 5, List.of(Enhancement.TAUNT));
 
     static final UntargetedSpell SHIELD_BLOCK_SPELL = new UntargetedSpell(NO_PRECONDITIONS_FOR_UNTARGETED, s -> {
         s.own().drawCard();
@@ -84,7 +90,7 @@ public record GameDeck(HeroType heroType, List<Card> cards) {
     static final Card ARCHMAGE = new MinionCard("Archmage", 6, "Spell Damage + 1", 4, 7, List.of());
     static final Card DARKSCALE_HEALER = new MinionCard("Darkscale Healer", 5, "Battlecry: restore 2 health to all friendly characters", 4, 5, List.of());
 
-    static final TargetClassification ANY = new TargetClassification(TargetType.CHARACTER, SideType.ALL, NO_FURTHER_REQUIREMENTS);
+
     static final TargetedSpell FIREBALL_SPELL = new TargetedSpell(ANY, (t, s) -> t.takeDamage(6));
     static final Card FIREBALL = new SpellCard("Fireball", 4, "deal 6 damage", FIREBALL_SPELL);
 

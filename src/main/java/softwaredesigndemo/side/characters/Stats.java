@@ -70,7 +70,7 @@ public class Stats {
     }
 
     public Stats changeAttack(int attackChange) {
-        return new Stats(maxHealth, health, attack + attackChange, enhancements, properties);
+        return new Stats(attack + attackChange, maxHealth, health, enhancements, properties);
     }
 
     public void enhance(UnaryOperator<Stats> transform) {

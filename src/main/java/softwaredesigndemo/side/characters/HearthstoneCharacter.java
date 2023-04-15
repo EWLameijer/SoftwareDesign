@@ -3,6 +3,8 @@ package softwaredesigndemo.side.characters;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import static softwaredesigndemo.side.characters.Hero.DEFAULT_HERO_NAME;
+
 public abstract class HearthstoneCharacter {
     protected Stats stats; // cannot be final due to polymorph
 
@@ -44,17 +46,20 @@ public abstract class HearthstoneCharacter {
     }
 
     public boolean canAttack() {
-        return stats.getAttack() > 0 && !isFrozen();
+        return getAttack() > 0 && !isFrozen();
     }
 
+    abstract protected int getAttack();
+
     public String attack(HearthstoneCharacter attackee) {
-        attackee.takeDamage(stats.getAttack());
+        attackee.takeDamage(getAttack());
         attacksRemainingThisTurn--;
         if (attackee instanceof Minion otherMinion) {
             // heroes CANNOT counterattack
-            takeDamage(otherMinion.stats.getAttack());
+            takeDamage(otherMinion.getAttack());
         }
-        return name + " attacks " + attackee.name;
+        String attackeeName = attackee.name.equals(DEFAULT_HERO_NAME) ? "the enemy hero" : attackee.name;
+        return name + " attacks " + attackeeName;
     }
 
     public void startTurn() {

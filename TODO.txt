@@ -1,8 +1,3 @@
 TODOs
 
-1) Mage spells
-    POLYMORPH
-1b) COIN (spell)
-2) weapons
-3) hero powers
 4) minion abilities

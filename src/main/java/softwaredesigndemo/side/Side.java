@@ -76,7 +76,7 @@ public class Side {
         do {
             showStatus();
             System.out.print("Which card do you want to play? (0-9), a letter to attack (b# lets your second " +
-                    "minion attack the third minion of the opponent), or Q to end your turn: ");
+                    "minion attack the third minion of the opponent), '+' to use your hero power or Q to end your turn: ");
             String choice = in.nextLine();
             if (choice.isBlank()) continue;
             if (choice.equalsIgnoreCase("Q")) return;
@@ -114,11 +114,13 @@ public class Side {
     }
 
     private String execute(String choice) {
+        var sides = new Sides(this, opponentsSide);
+        if (choice.equals("+")) return hero.useHeroPower(sides);
         char first = choice.charAt(0);
         String response;
         if (Character.isDigit(first)) {
             int chosenCardIndex = Integer.parseInt(choice.substring(0, 1));
-            response = hand.play(chosenCardIndex, new Sides(this, opponentsSide));
+            response = hand.play(chosenCardIndex, sides);
         } else {
             if (Character.isLetter(first)) {
                 char attackerSymbol = Character.toUpperCase(first);

@@ -20,7 +20,7 @@ public class ManaBar {
         availableMana = capacity;
     }
 
-    void consume(int amount) {
+    public void consume(int amount) {
         if (amount < 0 || amount > availableMana)
             throw new IllegalArgumentException("ManaBar.consume() error: " + amount + "  is out of range!");
         availableMana -= amount;

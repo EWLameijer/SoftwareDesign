@@ -1,6 +1,7 @@
 package softwaredesigndemo.cards;
 
 import softwaredesigndemo.Sides;
+import softwaredesigndemo.side.characters.Weapon;
 
 public class WeaponCard extends Card {
     private final int attack;
@@ -15,6 +16,7 @@ public class WeaponCard extends Card {
 
     @Override
     public void play(Sides sides) {
+        sides.own().getHero().equip(new Weapon(attack, durability));
     }
 }
 
