@@ -1,16 +1,23 @@
-## Algemene tips bij vastlopen
+## Algemene tips bij vastlopen+ vraag Sem, Aad, Mathijs!
 
-1. Zeker bij kleinere programmeerproblemen, ga niet uren zitten staren. Zet een deadline (bijvoorbeeld van 15 minuten). Als het dan nog niet gelukt is, vraag om een oplossing en probeer die te begrijpen. Probeer het probleem dan de volgende dag opnieuw. Programmeren is voor een groot deel het *leren* van patronen, je hoeft ze niet allemaal zelf uit te vinden. Als je net als Newton op de 'schouders van reuzen' probeert te staan (Newton had zelf in zijn jeugd uitgebreid gelezen in de werken van Galileo, Huygens en Descartes) kom je het snelst het verst.
+1. Zeker bij kleinere programmeerproblemen, ga niet uren zitten staren. Zet een deadline (bijvoorbeeld van 15 minuten). Als het dan nog niet gelukt is, vraag om een oplossing en probeer die te begrijpen. Probeer het probleem dan de volgende dag opnieuw. Programmeren is voor een groot deel het *leren* van patronen, je hoeft ze niet allemaal zelf uit te vinden. Als je net als Newton op de 'schouders van reuzen' probeert te staan (Newton had zelf in zijn jeugd uitgebreid gelezen in de werken van Galileo, Huygens en Descartes) kom je het snelst het verst. En wel, zelfs 'slechte' oplossingen kunnen in het begin helpen; desnoods sta je even op de schouders van dwergen, en werk je je langzamerhand vanuit daar naar boven :).
 
 2. Als je voor het probleem toevallig geen oplossing voorhanden hebt, 'diversificeer' je probleemoplossingsstrategie. Onze hersenen werken anders als we praten dan als we schrijven, als we zitten of als we staan. Een paar methoden:
 
-	1. probeer een methode uit te schrijven in normale taal - het Pseudocode Programming Process
-	2. Probeer het probleem uit te tekenen / diagrammen of schetsen te maken.
-	3. Probeer te 'rubber ducken': sommige programmeurs hebben een rubber eendje waartegen ze praten als ze niet uit een bug komen. Een rubber eendje kan werken, maar een kamerplant (of zelfs collega) kan ook helpen. Het gaat er niet om dat het eendje of de collega bijzonder veel kennis hebben van programmeren en veel terug kunnen praten (al kan dat zeker wel helpen!), het gaat erom dat als **jij** aan het praten bent er andere delen van je hersenen worden geactiveerd dan als je 
+	- probeer een methode uit te schrijven in normale taal - het Pseudocode Programming Process
+	- 'Gewoon' je gedachten over het probleem opschrijven kan ook helpen.
+	- Probeer het probleem uit te tekenen / diagrammen of schetsen te maken.
+	- Probeer te 'rubber ducken': sommige programmeurs hebben een rubber eendje waartegen ze praten als ze niet uit een bug komen. Een rubber eendje kan werken, maar een kamerplant (of zelfs collega) kan ook helpen. Het gaat er niet om dat het eendje of de collega bijzonder veel kennis hebben van programmeren en veel terug kunnen praten (al kan dat zeker wel helpen!), het gaat erom dat als **jij** aan het praten bent er andere delen van je hersenen worden geactiveerd dan als je nadenkt of schrijft.
+	- Mogelijk dat visualiseren jou helpt, dat je het programma/probleem in je geest voorstelt? Iemand als Tesla ontwierp veel apparaten in zijn hoofd, stelde zich voor dat hij een deel van de machine was. Nu kan ik me geen gevallen herinneren waarin dit mij heeft geholpen met programmeren, maar iedereen is anders, en mogelijk helpt het jou wel! (net als kinesthesie-voelen; Einstein deed dat ook naast zijn visualisaties)
 	
--doorgaan
--Daan's diet coke; / opstaan. WC/AH
 
-Mathijs: begin met I/O
-
--kennis/schouders van reuzen (of desnoods dwergen)
+3. Een rondje lopen/even opstaan helpt vaak. Ik heb best veel bugs opgelost bij het naar buiten lopen, of onder het boodschappen doen, of zelfs toen ik opstond omdat een collega aandrong dat ik mee moest gaan met de lunch. Één van mijn studenten op de universiteit ging als hij vastzat naar de automaat om een blikje cola te halen. Opstaan en iets anders gaan doen helpt vaak echt!
+4. Vertrouw op 'bed, bad, toilet': bij veel lastige problemen zie ik de oplossing voor me als ik in bed lig, of schiet me de oplossing in als ik op de WC zit.
+5. Een *'industrial-strength'* aanpak van Bed/Bad/Toilet is de methode van Linus Pauling om bij lastige problemen een paar minuten voor het naar bed gaan intensief aan het probleem te denken; vaak kwam dan na een aantal dagen de oplossing naar hem bij het in slaap vallen, dromen of wakker worden.
+6. Een andere truc van de (overigens 2 Nobelprijzen gewonnen hebbende) Pauling was 'om goede ideeën te krijgen, krijg een heleboel ideeën, en gooi de slechte dan weg." Dus als je een slecht/stom idee hebt voor een algoritme, noteer het! Op zijn minst is het dan uit je hoofd zodat je je kan focusen op het genereren van andere ideeën, maar het kan ook best dat 1) het werkt en goed genoeg is voor een prototype of 2) met wat aanpassingen best wel goed is, of 3) je weer inspireert tot andere ideeën, en 4) je hersens activeert dat je iets doet anders dan navelstaren. 
+7. Doe iets/probeer iets. Het is beter slechte en/of rare code te schrijven dan naar het scherm te staren. Maak een 'proof of concept'. Mogelijk krijg je, als je eenmaal bezig bent, betere ideeën, maar sowieso is het beter iets te doen/te experimenteren dan blijven staren. Zoals schrijvers weleens zeggen: "Je kunt een slechte pagina altijd editen. Maar je kunt nooit een lege pagina editen". 
+7. "Incuberen": er is geen geslaagde wetenschapper of kunstenaar die nooit iets over zijn of haar vakgebied gelezen of gehoord heeft; in feite blijkt dat de bloeitijd van een vakgebied in een land meestal komt als er een paar decennia lang uitmuntende mentoren  actief zijn geweest. Dus koop een programmeerboek (desnoods een doodgewoon Java-boek), probeer de code daarin te begrijpen en zelfs uiteindelijk te kunnen voorspellen. Koop een boek over algoritmes (ik ben een fan van Skiena, maar er zijn ongetwijfeld andere en mogelijk ook betere). Stroop het internet af naar voorbeeldcode - google bijvoorbeeld op "Java example code" of "Java problems with solutions". Of kijk op sites als "Rosetta code". Ikzelf begon ook mijn programmeercarrière door een mengeling van voorbeeldcode uit een BASIC-boek over te typen en er dan zelf mee te experimenteren.
+8. Je kunt beginnen met bekijken wat de input en output van het probleem zijn. Kun je de invoer en uitvoer duidelijk beschrijven?
+9. Zeker als je programmeren aan het oefenen bent: ga je niet blindstaren op een probleem, zelfs als het de eerstvolgende opgave is. Als je er ondanks alle bovenstaande methoden niet uitkomt, doe een opgave van later in de reeks, of herhaal een van eerder in de reeks, of doe een opgave van een site als Code Wars, Advent of Code of Kattis.
+	 
+	
